@@ -115,26 +115,3 @@ Initialize your environment with git hooks
 ```bash
 grunt init-dev-env
 ```
-
-
-### Site generation
-
-There is a grunt task to generate the GitHub pages of the project, publishing also coverage, complexity and JSDocs pages.
-In order to initialize the GitHub pages, use:
-
-```bash
-grunt init-pages
-```
-
-This will also create a site folder under the root of your repository. This site folder is detached from your repository's
-history, and associated to the gh-pages branch, created for publishing. This initialization action should be done only
-once in the project history. Once the site has been initialized, publish with the following command:
-
-```bash
-grunt site
-```
-
-This command will only work after the developer has executed init-dev-env (that's the goal that will create the detached site).
-
-This command will also launch the coverage, doc and complexity task (see in the above sections).
-

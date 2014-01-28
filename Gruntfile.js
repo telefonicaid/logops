@@ -235,8 +235,6 @@ module.exports = function(grunt) {
 
     grunt.loadTasks('tools/tasks');
 
-    grunt.registerTask('init-pages', ['exec:githubPagesInit']);
-
     grunt.registerTask('init-dev-env', 'Initialize your environment with git hooks', ['hook:pre-commit']);
 
     grunt.registerTask('test', 'Run tests', ['mochaTest:unit']);
@@ -266,7 +264,6 @@ module.exports = function(grunt) {
         ['clean:reportLint', 'mkdir:reportLint', 'jshint:reportGruntfile', 'jshint:reportLib',
         'jshint:reportTest', 'gjslint:report']);
 
-    grunt.registerTask('site', ['doc', 'coverage', 'complexity', 'githubPages']);
 
     // Default task.
     grunt.registerTask('default', ['lint-jshint', 'test']);
