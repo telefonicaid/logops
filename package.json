@@ -40,5 +40,8 @@
     "grunt-mkdir": "~0.1.1",
     "grunt-contrib-clean": "~0.5.0"
   },
-  "keywords": []
+  "keywords": [],
+  "dependencies": {
+    "colors": "~0.6.2"
+  }
 }
