@@ -5,4 +5,4 @@
 --nomultiprocess
 --debug_indentation
 --time
---max_line_length=120
+--max_line_length=170

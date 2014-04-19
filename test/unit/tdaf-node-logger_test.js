@@ -36,7 +36,7 @@ var streamStub = {
 
 describe('Logger Unit Tests', function() {
 
-  before( function(done) {
+  before(function(done) {
     process.env.NODE_ENV = 'production';
     logger = new require('../../');
     logger.stream = streamStub;

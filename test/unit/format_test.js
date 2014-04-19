@@ -27,7 +27,7 @@ var logger = null;
 require('colors');
 describe('Format traces with development environment', function() {
 
-  before(function (done) {
+  before(function(done) {
     process.env.NODE_ENV = 'development';
     logger = require('../../');
     done();
@@ -77,7 +77,8 @@ describe('Format traces with development environment', function() {
   });
 
 
-  it('should have red color when error trace is formatted and message is an Error instance without stack', function(done) {
+  it('should have red color when error trace is formatted' +
+    ' and message is an Error instance without stack', function(done) {
     var error = new Error('Sample message');
     error.stack = null;
     var result = logger.format('ERROR', null, error, '');
@@ -85,7 +86,7 @@ describe('Format traces with development environment', function() {
     done();
   });
 
-  after(function (done) {
+  after(function(done) {
     process.env.NODE_ENV = 'production';
     delete require.cache[require.resolve('../../')];
     done();

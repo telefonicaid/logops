@@ -24,9 +24,13 @@
 /**
  * Function that parses the TDAF log format.
  *
- * @param trace
+ * @param {String} trace Log trace.
+ *
+ * @return {Object} parsedTrace Javascript object of TDAF formatted trace.
  */
+/*jshint -W101*/
 var parseLog = function parseLog(trace) {
+
   var pattern = /^time=(\d{4}\-\d{2}\-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z) \| lvl=(INFO|WARN|ERROR|FATAL|DEBUG) \| corr=(.*) \| trans=(.*) \| op=(.*) \| msg=(.*)$/;
   var fields = trace.trim().match(pattern);
   if (fields === null) {
@@ -42,4 +46,9 @@ var parseLog = function parseLog(trace) {
   };
 };
 
+/**
+ * The exported parseLog method.
+ *
+ * @type {Object}
+ */
 module.exports = { parseLog: parseLog };
