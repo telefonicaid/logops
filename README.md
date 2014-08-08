@@ -1,17 +1,16 @@
-# tdaf-node-logger
+# logops
 
-Really simple and performant logger for node projects compatible with TDAF deployments as 
-[our Operations Team defined](http://wikis.hi.inet/tdaf/index.php/OP%26S) 
+Really simple and performant logger for node projects compatible with any kind of deployments as
+your server operations/environment defined 
 
 ## Installation
-Use the develop branch until some release is done
 ```bash
-npm install --save git+ssh://git@pdihub.hi.inet:TDAF/tdaf-node-logger.git#develop
+npm install logops
 ```
 
 ## Usage
 ```js
-var logger = require('tdaf-node-logger');
+var logger = require('logops');
 var context = {
   corr: 'cbefb082-3429-4f5c-aafd-26b060d6a9fc',
   trans: 'cbefb082-3429-4f5c-aafd-26b060d6a9fc',
@@ -39,7 +38,7 @@ If you are holding your context information in other places, like [Domains](http
 need to pass a context to __every__ log function. Simply override the `logger.getContext` method to let the logger to get it.
 
 ```js
-var logger = require('tdaf-node-logger');
+var logger = require('logops');
 //Set the operation 
 logger.getContext = function getDomainContext() {
   return require('domain').active.myContextObject;
@@ -56,7 +55,7 @@ logger.fatal('SYSTEM UNSTABLE. BYE', error);
 This library incorporates two flavours of trace formatting for `development` and `production` usage. 
 Checks the 'de-facto' NODE_ENV variable to use the built-in format functions.
 
-In production, when you perform `node index.js` the lib will use the [format specified by our operations team in the TDAF wiki] (http://wikis.hi.inet/tdaf/index.php/OP%26S#Log_Format)
+In production, when you perform `node index.js` the lib will use the following log format
 ```bash
 time=2014-01-29T10:31:32.288Z | lvl=ERROR | corr=cbefb082-3429-4f5c-aafd-26b060d6a9fc | trans=cbefb082-3429-4f5c-aafd-26b060d6a9fc | op=SendSMS | msg=Message
 ```
@@ -70,7 +69,7 @@ ERROR Message
 You can set the loggin level ant any time. All the disabled logging methods are replaced by a noop,
 so there is not any performance penalty at production using an undesired level
 ```js
-var logger = require('tdaf-node-logger');
+var logger = require('logops');
 
 // {String} level one of the following values ['DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL']
 logger.setLevel('DEBUG');
@@ -81,8 +80,8 @@ This library writes by default to `process.stdout`, the safest, fastest and easy
 you define how to manage logs. This way, you completly delegate to the operations team this management, and you dont need
 to change your source code to fit with every need.
 
-This approach is also compatible with [logratate](http://linuxcommand.org/man_pages/logrotate8.html) as this is how [OPs manage
-the logs](http://wikis.hi.inet/tdaf/index.php/OP%26S#Log_file_naming_conventions). Therefore you don't need to put __anything__ 
+This approach is also compatible with [logratate](http://linuxcommand.org/man_pages/logrotate8.html) as this is how many servers and PaaS manage the logs.
+Therefore you don't need to put __anything__ 
 in your source code relative to logs, and all is done at execution time depending on the deployment (and the OPs team).
 
 __Recommended execution:__ Pipelining the stdout to [tee](http://en.wikipedia.org/wiki/Tee_(command). 
@@ -104,7 +103,7 @@ You can override the format function and manage by yourself the formatting takin
 overriding the `logger.format` function
 
 ```js
-var logger = require('tdaf-node-logger');
+var logger = require('logops');
 /**
  * Return a String representation for a trace.
  * @param {String} level One of the following values
@@ -127,7 +126,7 @@ If you want to pipe the output stream to any other stream in your source code, o
 you can override the stream used by this library
 
 ```js
-var logger = require('tdaf-node-logger');
+var logger = require('logops');
 logger.stream = new MyOtherSuperStreamThatDoesGreatThingsExceptWriteToDisk();
 ```
 
@@ -245,3 +244,13 @@ Initialize your environment with git hooks
 ```bash
 grunt init-dev-env
 ```
+
+## License 
+
+Copyright 2014 Telefonica Investigación y Desarrollo, S.A.U
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
