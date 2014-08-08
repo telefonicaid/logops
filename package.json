@@ -1,7 +1,7 @@
 {
-  "name": "tdaf-node-logger",
-  "description": "Logger for node projects compatible with tdaf deployments",
-  "version": "0.1.0",
+  "name": "logops",
+  "description": "Simple and performant nodejs logger",
+  "version": "0.2.0",
   "homepage": "",
   "author": {
     "name": "Javier Mendiara Cañardo",
@@ -9,12 +9,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://pdihub.hi.inet/TDAF/tdaf-node-logger.git"
+    "url": "git@github.com:telefonicaid/logops.git"
   },
   "bugs": {
-    "url": "https://pdihub.hi.inet/TDAF/tdaf-node-logger/issues"
+    "url": "https://github.com/telefonicaid/logops/issues"
   },
-  "main": "lib/tdaf-node-logger",
+  "main": "lib/logops",
   "engines": {
     "node": ">=0.10.8"
   },
@@ -43,5 +43,10 @@
   "keywords": [],
   "dependencies": {
     "colors": "~0.6.2"
-  }
+  },
+  "contributors": [
+    "labajo <jherlab@gmail.com>",
+    "Juan Antonio Hernando Labajo <Kaiser@iMac-de-Juan.local>",
+    "Juan Antonio Hernando Labajo <labajo@tid.es>"
+  ]
 }
