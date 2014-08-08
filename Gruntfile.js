@@ -139,18 +139,9 @@ module.exports = function(grunt) {
             }
         },
 
-        githubPages: {
-            target: {
-                options: {
-                    commitMessage: 'UPDATE Doc'
-                },
-                src: 'site'
-            }
-        },
-
         dox: {
             options: {
-                title: 'tdaf-node-logger documentation'
+                title: 'logops documentation'
             },
             files: {
                 src: ['<%= jshint.lib.src %>'],

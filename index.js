@@ -1,1 +1,1 @@
-module.exports = require('./lib/tdaf-node-logger');
+module.exports = require('./lib/logops');
