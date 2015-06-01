@@ -1,6 +1,6 @@
 'use strict';
 
-var logUtils = require('./log-utils');
+var logUtils = require('./log_utils');
 var logger = null;
 var levels = ['debug', 'info', 'warn', 'error', 'fatal'];
 var lastTraces = [];
@@ -145,7 +145,6 @@ describe('Logger Unit Tests', function() {
       done();
     });
 
-
     beforeEach(function(done) {
       lastTraces = [];
       done();
@@ -249,7 +248,6 @@ describe('Logger Unit Tests', function() {
 
 
   describe('Logs with WARN level', function() {
-
 
     before(function(done) {
       logger.setLevel('WARN');

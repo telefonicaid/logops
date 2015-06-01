@@ -1,7 +1,6 @@
 # logops
 
-Really simple and performant logger for node projects compatible with any kind of deployments as
-your server operations/environment defined 
+Really simple and performant logger for node.js projects.
 
 ## Installation
 ```bash
@@ -26,7 +25,7 @@ logger.info(context, 'Request %s %d %j', 'is', 5, {key: 'value'});
 //Multi string
 logger.warn(context, 'Something went wrong:', value);
 
-//error as second parameter to print stack traces 
+//error as second parameter to print stack traces
 logger.error(context, new Error('Something went REALLY wrong'));
 
 //errors as parameter to print messages only
@@ -39,7 +38,7 @@ need to pass a context to __every__ log function. Simply override the `logger.ge
 
 ```js
 var logger = require('logops');
-//Set the operation 
+//Set the operation
 logger.getContext = function getDomainContext() {
   return require('domain').active.myContextObject;
 }
@@ -52,7 +51,7 @@ logger.fatal('SYSTEM UNSTABLE. BYE', error);
 ```
 
 ### Trace format
-This library incorporates two flavours of trace formatting for `development` and `production` usage. 
+This library incorporates two flavours of trace formatting for `development` and `production` usage.
 Checks the 'de-facto' NODE_ENV variable to use the built-in format functions.
 
 In production, when you perform `node index.js` the lib will use the following log format
@@ -76,16 +75,16 @@ logger.setLevel('DEBUG');
 ```
 
 ### Writing to files
-This library writes by default to `process.stdout`, the safest, fastest and easy way to manage logs. It's how you execute your app when 
+This library writes by default to `process.stdout`, the safest, fastest and easy way to manage logs. It's how you execute your app when
 you define how to manage logs. This way, you completly delegate to the operations team this management, and you dont need
 to change your source code to fit with every need.
 
 This approach is also compatible with [logratate](http://linuxcommand.org/man_pages/logrotate8.html) as this is how many servers and PaaS manage the logs.
-Therefore you don't need to put __anything__ 
+Therefore you don't need to put __anything__
 in your source code relative to logs, and all is done at execution time depending on the deployment (and the OPs team).
 
-__Recommended execution:__ Pipelining the stdout to [tee](http://en.wikipedia.org/wiki/Tee_(command). 
-With this configuration, you write logs fully asyncronously and don't fails when the disk is full. It's also the best 
+__Recommended execution:__ Pipelining the stdout to [tee](http://en.wikipedia.org/wiki/Tee_(command).
+With this configuration, you write logs fully asyncronously and don't fails when the disk is full. It's also the best
 performant solution
 ```
 node index.js | tee -a ./out.log > /dev/null
@@ -99,7 +98,7 @@ node index.js > ./out.log
 ## Customization
 
 ### Trace format
-You can override the format function and manage by yourself the formatting taking into account your own environment variables by 
+You can override the format function and manage by yourself the formatting taking into account your own environment variables by
 overriding the `logger.format` function
 
 ```js
@@ -122,7 +121,7 @@ logger.format = function myCustomFormat(level, context, message, args) {
 ```
 
 ### Output stream
-If you want to pipe the output stream to any other stream in your source code, or even write to files *(not recommended)*, 
+If you want to pipe the output stream to any other stream in your source code, or even write to files *(not recommended)*,
 you can override the stream used by this library
 
 ```js
@@ -245,9 +244,9 @@ Initialize your environment with git hooks
 grunt init-dev-env
 ```
 
-## License 
+## License
 
-Copyright 2014 Telefonica Investigación y Desarrollo, S.A.U
+Copyright 2015 Telefonica Investigación y Desarrollo, S.A.U
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
