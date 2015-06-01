@@ -1,15 +1,17 @@
 'use strict';
 
-var logUtils = require('./log-utils');
+var logUtils = require('./log_utils');
 var logger = null;
 var levels = ['debug', 'info', 'warn', 'error', 'fatal'];
 var lastTraces = [];
+
+var NOT_AVAILABLE = 'n/a';
+
 var streamStub = {
   write: function(trace) {
     lastTraces.push(logUtils.parseLog(trace));
   }
 };
-
 
 describe('Logger Unit Tests', function() {
 
@@ -17,6 +19,7 @@ describe('Logger Unit Tests', function() {
     process.env.NODE_ENV = 'production';
     logger = new require('../../');
     logger.stream = streamStub;
+    logger.format = logger.formatters.pipe;
     done();
   });
 
@@ -43,9 +46,9 @@ describe('Logger Unit Tests', function() {
       expect(lastTraces).to.have.length(4);
       lastTraces.forEach(function(trace) {
         expect(trace.lvl).to.not.equal('DEBUG');
-        expect(trace.corr).to.be.equal('n/a');
-        expect(trace.trans).to.be.equal('n/a');
-        expect(trace.op).to.be.equal('n/a');
+        expect(trace.corr).to.be.equal(NOT_AVAILABLE);
+        expect(trace.trans).to.be.equal(NOT_AVAILABLE);
+        expect(trace.op).to.be.equal(NOT_AVAILABLE);
         expect(trace.msg).to.be.equal(message);
       });
       done();
@@ -67,9 +70,9 @@ describe('Logger Unit Tests', function() {
       expect(lastTraces).to.have.length(4);
       lastTraces.forEach(function(trace) {
         expect(trace.lvl).to.not.equal('DEBUG');
-        expect(trace.corr).to.be.equal('n/a');
-        expect(trace.trans).to.be.equal('n/a');
-        expect(trace.op).to.be.equal('n/a');
+        expect(trace.corr).to.be.equal(NOT_AVAILABLE);
+        expect(trace.trans).to.be.equal(NOT_AVAILABLE);
+        expect(trace.op).to.be.equal(NOT_AVAILABLE);
         expect(trace.msg).to.be.equal('Request is 5 {"key":"value"}');
       });
       done();
@@ -145,7 +148,6 @@ describe('Logger Unit Tests', function() {
       done();
     });
 
-
     beforeEach(function(done) {
       lastTraces = [];
       done();
@@ -162,9 +164,9 @@ describe('Logger Unit Tests', function() {
       });
       expect(lastTraces).to.have.length(5);
       lastTraces.forEach(function(trace) {
-        expect(trace.corr).to.be.equal('n/a');
-        expect(trace.trans).to.be.equal('n/a');
-        expect(trace.op).to.be.equal('n/a');
+        expect(trace.corr).to.be.equal(NOT_AVAILABLE);
+        expect(trace.trans).to.be.equal(NOT_AVAILABLE);
+        expect(trace.op).to.be.equal(NOT_AVAILABLE);
         expect(trace.msg).to.be.equal(message);
       });
       done();
@@ -181,9 +183,9 @@ describe('Logger Unit Tests', function() {
       });
       expect(lastTraces).to.have.length(5);
       lastTraces.forEach(function(trace) {
-        expect(trace.corr).to.be.equal('n/a');
-        expect(trace.trans).to.be.equal('n/a');
-        expect(trace.op).to.be.equal('n/a');
+        expect(trace.corr).to.be.equal(NOT_AVAILABLE);
+        expect(trace.trans).to.be.equal(NOT_AVAILABLE);
+        expect(trace.op).to.be.equal(NOT_AVAILABLE);
         expect(trace.msg).to.be.equal('Request is 5 {"key":"value"}');
       });
       done();
@@ -250,7 +252,6 @@ describe('Logger Unit Tests', function() {
 
   describe('Logs with WARN level', function() {
 
-
     before(function(done) {
       logger.setLevel('WARN');
       done();
@@ -278,9 +279,9 @@ describe('Logger Unit Tests', function() {
       lastTraces.forEach(function(trace) {
         expect(trace.lvl).to.not.equal('DEBUG');
         expect(trace.lvl).to.not.equal('INFO');
-        expect(trace.corr).to.be.equal('n/a');
-        expect(trace.trans).to.be.equal('n/a');
-        expect(trace.op).to.be.equal('n/a');
+        expect(trace.corr).to.be.equal(NOT_AVAILABLE);
+        expect(trace.trans).to.be.equal(NOT_AVAILABLE);
+        expect(trace.op).to.be.equal(NOT_AVAILABLE);
         expect(trace.msg).to.be.equal(message);
       });
       done();
@@ -303,9 +304,9 @@ describe('Logger Unit Tests', function() {
       lastTraces.forEach(function(trace) {
         expect(trace.lvl).to.not.equal('DEBUG');
         expect(trace.lvl).to.not.equal('INFO');
-        expect(trace.corr).to.be.equal('n/a');
-        expect(trace.trans).to.be.equal('n/a');
-        expect(trace.op).to.be.equal('n/a');
+        expect(trace.corr).to.be.equal(NOT_AVAILABLE);
+        expect(trace.trans).to.be.equal(NOT_AVAILABLE);
+        expect(trace.op).to.be.equal(NOT_AVAILABLE);
         expect(trace.msg).to.be.equal('Request is 5 {"key":"value"}');
       });
       done();
