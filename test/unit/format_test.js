@@ -79,7 +79,7 @@ describe('Format traces in JSON format', function() {
 
   it('should log a simple message as JSON', function(done) {
     var message = 'Sample Message';
-    var result = logger.format('INFO', null, message, '');
+    var result = logger.format('INFO', null, message, []);
     var resultJson = JSON.parse(result);
 
     expect(resultJson.level).to.be.equal('INFO');
@@ -103,9 +103,8 @@ describe('Format traces in JSON format', function() {
         stannis: 'baratheon'
       }
     };
-    var result = logger.format('INFO', null, message, '');
+    var result = logger.format('INFO', null, '', [message]);
     var resultJson = JSON.parse(result);
-
     expect(resultJson.number).to.be.equal(42);
 
     var date = new Date(resultJson.date);
@@ -113,6 +112,18 @@ describe('Format traces in JSON format', function() {
 
     expect(resultJson.nested.john).to.be.equal('snow');
     expect(resultJson.nested.stannis).to.be.equal('baratheon');
+    done();
+  });
+
+  it('should log two custom objects as JSON', function(done) {
+    var obj1 = {a: 1};
+    var obj2 = {b: 2};
+
+    var result = logger.format('INFO', null, '', [obj1, obj2]);
+    var resultJson = JSON.parse(result);
+    expect(resultJson.a).to.be.equal(1);
+    expect(resultJson.b).to.be.equal(2);
+
     done();
   });
 
@@ -124,7 +135,7 @@ describe('Format traces in JSON format', function() {
       trans: 'fake_trans',
       op: 'fake_op'
     };
-    var result = logger.format('INFO', context, message, '');
+    var result = logger.format('INFO', context, message, []);
     var resultJson = JSON.parse(result);
 
     expect(resultJson.corr).to.be.equal('fake_corr');
@@ -140,6 +151,16 @@ describe('Format traces in JSON format', function() {
     var resultJson = JSON.parse(result);
 
     expect(resultJson.msg).to.be.equal('Sample Message 1234 fakearg');
+    done();
+  });
+
+  it('should log as JSON with version and pid', function(done) {
+    var result = logger.format('INFO', null, 'hi', []);
+    var resultJson = JSON.parse(result);
+
+    expect(resultJson.v).to.be.a.number;
+    expect(resultJson.pid).to.be.a.number;
+
     done();
   });
 
