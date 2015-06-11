@@ -67,18 +67,18 @@ This library incorporates three flavors of trace formatting:
 * "pipe": writes logs separating fields with pipes. This is the default value in logops <0.3.x
 * "dev": for development, used if the 'de-facto' NODE_ENV variable is set to 'development'
 
-```bash
+```js
 logger.format = logger.formatters.json;
 logger.debug('This is an example');
-{"msg":"This is an example","time":"2015-06-11T08:36:16.628Z","level":"DEBUG","op":null,"corr":null,"trans":null}
+//output: {"msg":"This is an example","time":"2015-06-11T08:36:16.628Z","level":"DEBUG","op":null,"corr":null,"trans":null}
 
 logger.format = logger.formatters.pipe;
 logger.debug('This is an example');
-time=2015-06-11T08:36:16.628Z | lvl=DEBUG | corr=n/a | trans=n/a | op=n/a | msg=This is an example
+//output: time=2015-06-11T08:36:16.628Z | lvl=DEBUG | corr=n/a | trans=n/a | op=n/a | msg=This is an example
 
 logger.format = logger.formatters.dev;
 logger.debug('This is an example');
-This is an example
+//output: This is an example
 ```
 
 ### Logger Level
