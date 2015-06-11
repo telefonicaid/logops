@@ -19,6 +19,7 @@ describe('Logger Unit Tests', function() {
     process.env.NODE_ENV = 'production';
     logger = new require('../../');
     logger.stream = streamStub;
+    logger.format = logger.formatters.pipe;
     done();
   });
 

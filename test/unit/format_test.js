@@ -73,7 +73,7 @@ describe('Format traces in JSON format', function() {
   before(function(done) {
     process.env.NODE_ENV = 'development';
     logger = require('../../');
-    logger.format = require('../../lib/formatters').formatJsonTrace;
+    logger.format = logger.formatters.json;
     done();
   });
 
@@ -154,12 +154,16 @@ describe('Format traces in JSON format', function() {
     done();
   });
 
-  it('should log as JSON with version and pid', function(done) {
-    var result = logger.format('INFO', null, 'hi', []);
+  it('should log as JSON with placeholders', function(done) {
+    var obj1 = {a: 1};
+    var obj2 = {b: 2};
+
+    var result = logger.format('INFO', null, 'placeholder %d %j', [123, obj1, obj2]);
     var resultJson = JSON.parse(result);
 
-    expect(resultJson.v).to.be.a.number;
-    expect(resultJson.pid).to.be.a.number;
+    expect(resultJson.msg).to.equal('placeholder 123 {\"a\":1}');
+    expect(resultJson.a).to.not.exist; // the first object goes to the placeholder
+    expect(resultJson.b).to.be.equal(2);
 
     done();
   });
