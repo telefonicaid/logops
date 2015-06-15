@@ -82,7 +82,7 @@ describe('Format traces in JSON format', function() {
     var result = logger.format('INFO', null, message, []);
     var resultJson = JSON.parse(result);
 
-    expect(resultJson.level).to.be.equal('INFO');
+    expect(resultJson.lvl).to.be.equal('INFO');
     expect(resultJson.msg).to.be.equal(message);
 
     expect(resultJson.corr).to.not.exist;
