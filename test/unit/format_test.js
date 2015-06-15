@@ -170,7 +170,7 @@ describe('Format traces in JSON format', function() {
 
   it('should log as JSON with placeholders', function(done) {
     var obj1 = {a: 1};
-    var obj2 = {toJSON: function() { return {b:2}; }};
+    var obj2 = {toJSON: function() { return {b: 2}; }};
 
     var result = logger.format('INFO', context, 'placeholder %d %j', [123, obj1, obj2]);
     var resultJson = JSON.parse(result);
