@@ -6,6 +6,7 @@ require('colors');
 describe('Format traces with development environment', function() {
 
   before(function(done) {
+    delete process.env.LOGOPS_FORMAT;
     process.env.NODE_ENV = 'development';
     logger = require('../../');
     done();
@@ -64,6 +65,27 @@ describe('Format traces with development environment', function() {
 
   after(function(done) {
     process.env.NODE_ENV = 'production';
+    delete require.cache[require.resolve('../../')];
+    done();
+  });
+});
+
+describe('Select JSON traces', function() {
+  before(function(done) {
+    process.env.LOGOPS_FORMAT = 'json';
+    logger = require('../../');
+    done();
+  });
+
+  it('should log a simple message as JSON', function(done) {
+    var message = 'Sample Message';
+    var result = logger.format('INFO', context, message, []);
+    var resultJson = JSON.parse(result);
+
+    done();
+  });
+
+  after(function(done) {
     delete require.cache[require.resolve('../../')];
     done();
   });
