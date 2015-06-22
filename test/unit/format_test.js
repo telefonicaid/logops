@@ -70,22 +70,37 @@ describe('Format traces with development environment', function() {
   });
 });
 
-describe('Select JSON traces', function() {
+describe('Select log format with an env variable', function() {
   before(function(done) {
+    delete process.env.LOGOPS_FORMAT;
+    done();
+  });
+
+  it('should select "json" format', function(done) {
     process.env.LOGOPS_FORMAT = 'json';
     logger = require('../../');
+
+    expect(logger.format).to.be.equal(logger.formatters.json);
     done();
   });
 
-  it('should log a simple message as JSON', function(done) {
-    var message = 'Sample Message';
-    var result = logger.format('INFO', context, message, []);
-    var resultJson = JSON.parse(result);
+  it('should select "dev" format', function(done) {
+    process.env.LOGOPS_FORMAT = 'dev';
+    logger = require('../../');
 
+    expect(logger.format).to.be.equal(logger.formatters.dev);
     done();
   });
 
-  after(function(done) {
+  it('should select "pipe" format', function(done) {
+    process.env.LOGOPS_FORMAT = 'pipe';
+    logger = require('../../');
+
+    expect(logger.format).to.be.equal(logger.formatters.pipe);
+    done();
+  });
+
+  afterEach(function(done) {
     delete require.cache[require.resolve('../../')];
     done();
   });
