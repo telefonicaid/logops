@@ -6,6 +6,7 @@ require('colors');
 describe('Format traces with development environment', function() {
 
   before(function(done) {
+    delete process.env.LOGOPS_FORMAT;
     process.env.NODE_ENV = 'development';
     logger = require('../../');
     done();
@@ -64,6 +65,42 @@ describe('Format traces with development environment', function() {
 
   after(function(done) {
     process.env.NODE_ENV = 'production';
+    delete require.cache[require.resolve('../../')];
+    done();
+  });
+});
+
+describe('Select log format with an env variable', function() {
+  before(function(done) {
+    delete process.env.LOGOPS_FORMAT;
+    done();
+  });
+
+  it('should select "json" format', function(done) {
+    process.env.LOGOPS_FORMAT = 'json';
+    logger = require('../../');
+
+    expect(logger.format).to.be.equal(logger.formatters.json);
+    done();
+  });
+
+  it('should select "dev" format', function(done) {
+    process.env.LOGOPS_FORMAT = 'dev';
+    logger = require('../../');
+
+    expect(logger.format).to.be.equal(logger.formatters.dev);
+    done();
+  });
+
+  it('should select "pipe" format', function(done) {
+    process.env.LOGOPS_FORMAT = 'pipe';
+    logger = require('../../');
+
+    expect(logger.format).to.be.equal(logger.formatters.pipe);
+    done();
+  });
+
+  afterEach(function(done) {
     delete require.cache[require.resolve('../../')];
     done();
   });

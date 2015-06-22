@@ -63,7 +63,7 @@ logger.debug('This is an example');
 ### Trace format
 
 This library incorporates three flavors of trace formatting:
-* "json": writes logs as JSON. 
+* "json": writes logs as JSON.
 * "pipe": writes logs separating fields with pipes. This is the default value in logops
 * "dev": for development, used if the 'de-facto' NODE_ENV variable is set to 'development'
 
@@ -79,6 +79,12 @@ logger.info('This is an example: %d', 5, {key:"value");
 logger.format = logger.formatters.dev;
 logger.info('This is an example: %d', 5, {key:"value"});
 //output: INFO This is an example: 5 { key: 'value' }
+```
+
+You can also enable 'json' format using an environment variable:
+
+```bash
+export LOGOPS_FORMAT=json
 ```
 
 ### Logger Level
