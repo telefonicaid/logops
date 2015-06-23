@@ -3,6 +3,7 @@
 Really simple and performant logger for node.js projects.
 
 [![Build Status](https://travis-ci.org/telefonicaid/logops.svg)](https://travis-ci.org/telefonicaid/logops)
+[![Dependency Status](https://gemnasium.com/telefonicaid/logops.svg)](https://gemnasium.com/telefonicaid/logops)
 
 ## Installation
 
@@ -173,7 +174,7 @@ logger.stream = new MyOtherSuperStreamThatDoesGreatThingsExceptWriteToDisk();
 
 ## License
 
-Copyright 2014, [2015 Telefonica Investigación y Desarrollo, S.A.U](http://www.tid.es)
+Copyright 2014, 2015 [Telefonica Investigación y Desarrollo, S.A.U](http://www.tid.es)
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
