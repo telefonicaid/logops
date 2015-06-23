@@ -1,11 +1,9 @@
-./node_modules/
-./.idea/
-./doc/
-./coverage/
-./site
-./report/
-./.c9revisions/
-./.settings/
+.idea/
+doc/
+coverage/
+site
+report/
+c9revisions/
 
 .settings
 .classpath
@@ -23,5 +21,5 @@ npm-debug.log
 
 Gruntfile.js
 README_DEV.md
-./test
-./tools
+test/
+tools/
