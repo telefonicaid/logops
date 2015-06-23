@@ -2,6 +2,8 @@
 
 Really simple and performant logger for node.js projects.
 
+[![Build Status](https://travis-ci.org/telefonicaid/logops.svg)](https://travis-ci.org/telefonicaid/logops)
+
 ## Installation
 
 ```bash
