@@ -217,12 +217,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-mocha-test');
-    grunt.loadNpmTasks('grunt-github-pages');
     grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-plato');
     grunt.loadNpmTasks('grunt-gjslint');
     grunt.loadNpmTasks('grunt-dox');
     grunt.loadNpmTasks('grunt-mkdir');
+    grunt.loadNpmTasks('grunt-release');
 
     grunt.loadTasks('tools/tasks');
 
