@@ -81,7 +81,7 @@ logger.info('This is an example: %d', 5, {key:"value"});
 //output: INFO This is an example: 5 { key: 'value' }
 ```
 
-You can also enable 'json' format using an environment variable:
+You can also set the format specifying the formatter with `LOGOPS_FORMAT` environment variable:
 
 ```bash
 export LOGOPS_FORMAT=json
@@ -106,18 +106,25 @@ This library writes by default to `process.stdout`, the safest, fastest and easy
 This approach is also compatible with [logratate](http://linuxcommand.org/man_pages/logrotate8.html) as this is how many servers and PaaS manage the logs.
 Therefore you don't need to put __anything__ in your source code relative to logs, and all is done at execution time depending on the deployment.
 
-__Recommended execution:__ Pipelining the stdout to [tee](http://en.wikipedia.org/wiki/Tee_(command).
+__Recommended execution:__ Pipelining the stdout to [tee](http://en.wikipedia.org/wiki/Tee_(command)).
 With this configuration, you will not fail when the disk is full. It's also the best
 performant solution
 
+
+```bash
+# write all traces to out.log
+node index.js | tee -a out.log > /dev/null
 ```
-node index.js | tee -a ./out.log > /dev/null
+
+```bash
+# write error and fatal traces to error.log and all traces to out.log (using json formatter)
+LOGOPS_FORMAT=json node index.js | tee >(grep -a -F -e '"lvl":"ERROR"' -e '"lvl":"FATAL"' > error.log) > out.log
 ```
 
 You can also write logs and fail miserably stopping your app when the disk is full by doing
 
 ```bash
-node index.js > ./out.log
+node index.js > out.log
 ```
 
 Please read carefully in the node documentation how the `stdout`/`stderr` stream behaves [regarding synchronous/asynchronous writing](https://nodejs.org/api/process.html#process_process_stdout)

@@ -1,7 +1,7 @@
 {
   "name": "logops",
   "description": "Simple and performant nodejs logger",
-  "version": "0.3.1",
+  "version": "0.3.0",
   "homepage": "",
   "license": "Apache-2.0",
   "author": {
