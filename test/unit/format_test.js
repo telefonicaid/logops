@@ -89,6 +89,7 @@ describe('Select value for not available fields', function() {
   });
 
   after(function(done) {
+    logger.formatters.setNotAvailable('n/a'); // restore default value
     delete require.cache[require.resolve('../../')];
     done();
   });
