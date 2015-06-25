@@ -1,6 +1,8 @@
 'use strict';
 
-var logger = null, context = {};
+var logger = null,
+    context = {};
+
 require('colors');
 
 describe('Format traces with development environment', function() {
@@ -65,6 +67,28 @@ describe('Format traces with development environment', function() {
 
   after(function(done) {
     process.env.NODE_ENV = 'production';
+    delete require.cache[require.resolve('../../')];
+    done();
+  });
+});
+
+describe('Select value for not available fields', function() {
+  before(function(done) {
+    logger = require('../../');
+    done();
+  });
+
+  it('should log a custom value', function(done) {
+    logger.formatters.setNotAvailable('NOTAVAILABLE');
+
+    var result = logger.format('INFO', context, 'Message', []);
+    expect(result.indexOf('corr=NOTAVAILABLE')).to.be.gt(0);
+    expect(result.indexOf('trans=NOTAVAILABLE')).to.be.gt(0);
+    expect(result.indexOf('op=NOTAVAILABLE')).to.be.gt(0);
+    done();
+  });
+
+  after(function(done) {
     delete require.cache[require.resolve('../../')];
     done();
   });
