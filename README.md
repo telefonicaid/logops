@@ -84,6 +84,15 @@ logger.info('This is an example: %d', 5, {key:"value"});
 //output: INFO This is an example: 5 { key: 'value' }
 ```
 
+The "pipe" formatter uses "n/a" as the default value when a context field (corr, trans, op) is not found.
+You can change its value programmatically:
+
+```js
+logger.formatters.setNotAvailable('NA');
+logger.info('This is an example: %d', 5, {key:"value");
+//output: time=2015-06-11T08:36:16.628Z | lvl=INFO | corr=NA | trans=NA | op=NA | msg=This is an example: 5 { key: 'value' }
+```
+
 You can also set the format specifying the formatter with `LOGOPS_FORMAT` environment variable:
 
 ```bash
