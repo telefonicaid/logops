@@ -10,7 +10,7 @@ describe('Format traces with development environment', function() {
   before(function(done) {
     delete process.env.LOGOPS_FORMAT;
     process.env.NODE_ENV = 'development';
-    logger = require('../../');
+    logger = require('../lib/logops');
     done();
   });
 
@@ -67,14 +67,14 @@ describe('Format traces with development environment', function() {
 
   after(function(done) {
     process.env.NODE_ENV = 'production';
-    delete require.cache[require.resolve('../../')];
+    delete require.cache[require.resolve('../')];
     done();
   });
 });
 
 describe('Select value for not available fields', function() {
   before(function(done) {
-    logger = require('../../');
+    logger = require('../lib/logops');
     done();
   });
 
@@ -90,7 +90,7 @@ describe('Select value for not available fields', function() {
 
   after(function(done) {
     logger.formatters.setNotAvailable('n/a'); // restore default value
-    delete require.cache[require.resolve('../../')];
+    delete require.cache[require.resolve('../')];
     done();
   });
 });
@@ -103,7 +103,7 @@ describe('Select log format with an env variable', function() {
 
   it('should select "json" format', function(done) {
     process.env.LOGOPS_FORMAT = 'json';
-    logger = require('../../');
+    logger = require('../lib/logops');
 
     expect(logger.format).to.be.equal(logger.formatters.json);
     done();
@@ -111,7 +111,7 @@ describe('Select log format with an env variable', function() {
 
   it('should select "dev" format', function(done) {
     process.env.LOGOPS_FORMAT = 'dev';
-    logger = require('../../');
+    logger = require('../lib/logops');
 
     expect(logger.format).to.be.equal(logger.formatters.dev);
     done();
@@ -119,14 +119,14 @@ describe('Select log format with an env variable', function() {
 
   it('should select "pipe" format', function(done) {
     process.env.LOGOPS_FORMAT = 'pipe';
-    logger = require('../../');
+    logger = require('../lib/logops');
 
     expect(logger.format).to.be.equal(logger.formatters.pipe);
     done();
   });
 
   afterEach(function(done) {
-    delete require.cache[require.resolve('../../')];
+    delete require.cache[require.resolve('../')];
     done();
   });
 });
@@ -134,7 +134,7 @@ describe('Select log format with an env variable', function() {
 describe('Format traces in JSON format', function() {
   before(function(done) {
     process.env.NODE_ENV = 'development';
-    logger = require('../../');
+    logger = require('../lib/logops');
     logger.format = logger.formatters.json;
     done();
   });
@@ -257,7 +257,7 @@ describe('Format traces in JSON format', function() {
   });
 
   after(function(done) {
-    delete require.cache[require.resolve('../../')];
+    delete require.cache[require.resolve('../')];
     done();
   });
 });

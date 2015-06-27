@@ -1,6 +1,6 @@
 'use strict';
 
-var logUtils = require('./log_utils');
+var logUtils = require('./utils');
 var logger = null;
 var levels = ['debug', 'info', 'warn', 'error', 'fatal'];
 var lastTraces = [];
@@ -17,7 +17,7 @@ describe('Logger Unit Tests', function() {
 
   before(function(done) {
     process.env.NODE_ENV = 'production';
-    logger = new require('../../');
+    logger = new require('../lib/logops');
     logger.stream = streamStub;
     logger.format = logger.formatters.pipe;
     done();
@@ -378,7 +378,7 @@ describe('Logger Unit Tests', function() {
 
   after(function(done) {
     logger = null;
-    delete require.cache[require.resolve('../../')];
+    delete require.cache[require.resolve('../')];
     done();
   });
 
