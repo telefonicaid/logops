@@ -2,7 +2,9 @@
 
 Really simple and performant logger for node.js projects.
 
+[![npm version](https://badge.fury.io/js/logops.svg)](http://badge.fury.io/js/logops)
 [![Build Status](https://travis-ci.org/telefonicaid/logops.svg)](https://travis-ci.org/telefonicaid/logops)
+[![Coverage Status](https://coveralls.io/repos/telefonicaid/logops/badge.svg?branch=develop)](https://coveralls.io/r/telefonicaid/logops?branch=develop)
 [![Dependency Status](https://gemnasium.com/telefonicaid/logops.svg)](https://gemnasium.com/telefonicaid/logops)
 
 ## Installation
@@ -176,10 +178,6 @@ you can override the stream used by this library
 var logger = require('logops');
 logger.stream = new MyOtherSuperStreamThatDoesGreatThingsExceptWriteToDisk();
 ```
-
-## More info
-
-* [Development information](./README_DEV.md)
 
 ## License
 

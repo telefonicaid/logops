@@ -1,25 +1,16 @@
 .idea/
-doc/
 coverage/
-site
 report/
-c9revisions/
-
-.settings
-.classpath
-.project
-.metadata
-npm-debug.log
+test/
 
 *.bak
 *.orig
 
 .gitignore
-.gjslintrc
-.jshintrc
+.eslintrc
+.jscsrc
+.istanbul.yml
 .travis.yml
 
-Gruntfile.js
-README_DEV.md
-test/
-tools/
+npm-debug.log
+CONTRIBUTING.md

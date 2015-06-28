@@ -2,7 +2,7 @@
   "name": "logops",
   "description": "Simple and performant nodejs logger",
   "version": "0.4.1",
-  "homepage": "",
+  "homepage": "https://github.com/telefonicaid/logops",
   "license": "Apache-2.0",
   "author": {
     "name": "Javier Mendiara Cañardo",
@@ -20,26 +20,20 @@
     "node": ">=0.10.8"
   },
   "scripts": {
-    "test": "grunt test"
+    "travis": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec test/environment.js test/*.spec.js && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R dot test/environment.js test/*.spec.js",
+    "lint": "jscs lib && eslint lib",
+    "test": "mocha -R spec test/environment.js test/*.spec.js",
+    "prepublish": "npm run test && npm run lint"
   },
   "devDependencies": {
     "chai": "^3.0.0",
-    "closure-linter-wrapper": "^1.0.0",
-    "grunt": "^0.4.5",
-    "grunt-contrib-clean": "^0.6.0",
-    "grunt-contrib-jshint": "^0.11.2",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-dox": "^0.5.0",
-    "grunt-exec": "^0.4.6",
-    "grunt-gjslint": "^0.2.0",
-    "grunt-mkdir": "^0.1.2",
-    "grunt-mocha-test": "^0.12.7",
-    "grunt-plato": "^1.3.0",
-    "grunt-release": "^0.13.0",
+    "coveralls": "^2.11.2",
+    "eslint": "^0.23.0",
     "istanbul": "^0.3.15",
+    "jscs": "^1.13.1",
     "mocha": "^2.2.5",
-    "proxyquire": "^1.5.0",
-    "sinon": "^1.15.3",
+    "sinon": "^1.15.0",
     "sinon-chai": "^2.8.0"
   },
   "keywords": [
