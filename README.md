@@ -117,7 +117,7 @@ logger.setLevel('DEBUG');
 
 This library writes by default to `process.stdout`, the safest, fastest and easy way to manage logs. It's how you execute your app when you define how to manage logs.
 
-This approach is also compatible with [logratate](http://linuxcommand.org/man_pages/logrotate8.html) as this is how many servers and PaaS manage the logs.
+This approach is also compatible with [logrotate](http://linuxcommand.org/man_pages/logrotate8.html) as this is how many servers and PaaS manage the logs.
 Therefore you don't need to put __anything__ in your source code relative to logs, and all is done at execution time depending on the deployment.
 
 __Recommended execution:__ Pipelining the stdout to [tee](http://en.wikipedia.org/wiki/Tee_(command)).
