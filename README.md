@@ -113,6 +113,12 @@ var logger = require('logops');
 logger.setLevel('DEBUG');
 ```
 
+You can also set the logging level using the `LOGOPS_LEVEL` environment variable:
+
+```bash
+export LOGOPS_LEVEL=DEBUG
+```
+
 ### Writing to files
 
 This library writes by default to `process.stdout`, the safest, fastest and easy way to manage logs. It's how you execute your app when you define how to manage logs.

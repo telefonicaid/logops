@@ -4,7 +4,7 @@ var logUtils = require('./utils'),
     logger = null,
     logopsPath = '../lib/logops',
     levels = ['debug', 'info', 'warn', 'error', 'fatal'],
-    lastTraces = [], 
+    lastTraces = [],
     DEFAULT_NOT_AVAILABLE = 'n/a';
 
 var streamStub = {
@@ -139,7 +139,6 @@ describe('Logger Unit Tests', function() {
     });
 
   });
-
 
   describe('Logs with DEBUG level', function() {
 
@@ -374,6 +373,39 @@ describe('Logger Unit Tests', function() {
 
     });
 
+  });
+
+  describe('Configurable log level', function() {
+    beforeEach(function(done) {
+      process.env.LOGOPS_LEVEL = 'ERROR'
+
+      delete require.cache[require.resolve(logopsPath)];
+      logger = require(logopsPath);
+      logger.stream = streamStub;
+      done();
+    });
+
+    it(' should use env variable (LOGOPS_LEVEL)', function(done) {
+      var message = 'Sample Message.';
+      var streamSpy = sinon.spy(streamStub, 'write');
+
+      levels.forEach(function(level) {
+        logger[level](message);
+        if (level === 'error' || level === 'fatal') {
+          expect(streamSpy.calledOnce).to.be.true;
+        } else {
+          expect(streamSpy.callCount).to.be.equal(0);
+        }
+        streamSpy.reset();
+      });
+
+      done();
+    });
+
+    after(function(done) {
+      delete process.env.LOGOPS_LEVEL;
+      done();
+    });
   });
 
   after(function(done) {
