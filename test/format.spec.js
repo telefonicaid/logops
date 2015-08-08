@@ -245,13 +245,13 @@ describe('Format traces in JSON format', function() {
     done();
   });
 
-  it('should log as JSON in the message not literal objects', function(done) {
+  it('should log as JSON with not literal objects and no placeholders', function(done) {
     var obj1 = {a: 1};
 
-    var result = logger.format('INFO', context, 'placeholder', [obj1, 123]);
+    var result = logger.format('INFO', context, 'no placeholders', [1, 2, obj1, 3, 4]);
     var resultJson = JSON.parse(result);
 
-    expect(resultJson.msg).to.equal('placeholder 123');
+    expect(resultJson.msg).to.equal('no placeholders 1 2 3 4');
     expect(resultJson.a).to.be.equal(1);
 
     done();
