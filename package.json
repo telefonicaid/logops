@@ -24,6 +24,7 @@
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R dot test/environment.js test/*.spec.js",
     "lint": "jscs lib && eslint lib",
     "test": "mocha -R spec test/environment.js test/*.spec.js",
+    "release": "release-it --github.release --changelogCommand=\"git log --pretty=format:'* %s (%h)' --no-merges [REV_RANGE]\"",
     "prepublish": "npm run test && npm run lint"
   },
   "devDependencies": {
@@ -33,6 +34,7 @@
     "istanbul": "^0.4.0",
     "jscs": "^2.6.0",
     "mocha": "^2.2.5",
+    "release-it": "^2.3.1",
     "sinon": "^1.15.0",
     "sinon-chai": "^2.8.0"
   },
