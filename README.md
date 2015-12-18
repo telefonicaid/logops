@@ -2,10 +2,10 @@
 
 Really simple and performant logger for node.js projects.
 
-[![npm version](https://badge.fury.io/js/logops.svg)](http://badge.fury.io/js/logops)
-[![Build Status](https://travis-ci.org/telefonicaid/logops.svg)](https://travis-ci.org/telefonicaid/logops)
-[![Coverage Status](https://coveralls.io/repos/telefonicaid/logops/badge.svg?branch=develop)](https://coveralls.io/r/telefonicaid/logops?branch=develop)
-[![Dependency Status](https://gemnasium.com/telefonicaid/logops.svg)](https://gemnasium.com/telefonicaid/logops)
+[![npm version](https://img.shields.io/npm/v/logops.svg)](http://badge.fury.io/js/logops)
+[![Build Status](https://img.shields.io/travis/telefonicaid/logops.svg)](https://travis-ci.org/telefonicaid/logops)
+[![Coveralls branch](https://img.shields.io/coveralls/telefonicaid/logops/master.svg)](https://coveralls.io/r/telefonicaid/logops?branch=develop)
+[![Dependency Status](https://img.shields.io/gemnasium/telefonicaid/logops.svg)](https://gemnasium.com/telefonicaid/logops)
 
 ## Installation
 
@@ -20,88 +20,56 @@ var logger = require('logops');
 
 //plain strings
 logger.debug('This is an example');
+// {"time":"2015-12-22T16:31:39.220Z","lvl":"DEBUG","msg":"This is an example"}
 
 //util.format support
-logger.info('Request %s %d %j', 'is', 5, {key: 'value'});
+logger.info('Request %s %d %j', 'is', 5, {key: 'value'}, 'guy');
+// {"time":"2015-12-22T16:31:56.184Z","lvl":"INFO","msg":"Request is 5 {\"key\":\"value\"} guy"}
 
-//Multi string
-logger.warn('Something went wrong:', value);
+//properties in the log trace
+logger.warn({ip: '127.0.0.0'}, 'Something went wrong');
+// {"ip":"127.0.0.0","time":"2015-12-22T16:33:17.002Z","lvl":"WARN","msg":"Something went wrong"}
 
-//error to print stack traces
-logger.error(new Error('Something went REALLY wrong'));
+//special case: error instance to print error info (and stack traces)...
+logger.error(new TypeError('String required'));
+/* {"time":"2015-12-22T16:36:39.650Z","lvl":"ERROR",
+ *  "err":{"message":"String required","name":"TypeError","constructor":"TypeError","stack":"TypeError: String required\n    at...",
+ *  "msg":"TypeError: String required"} */
 
-//errors as parameter to print messages only
-logger.fatal('SYSTEM UNSTABLE. BYE', error);
+//... or specify the message
+logger.fatal(new Error('Out of memory'), 'SYSTEM UNSTABLE. BYE');
+/* {"time":"2015-12-22T16:45:36.468Z","lvl":"FATAL",
+ *  "err":{"message":"Out of memory","name":"Error","constructor":"Error","stack":"Error: Out of memory\n    at...",
+ *  "msg":"SYSTEM UNSTABLE. BYE"} */
 ```
 
-## Advanced usage
+* If you give an object as the first argument, you will print its properties but not a String representation of it. `logger.info(req)` will set all `req` properties in the final json. `logger.info({a:'guy'}) =>
+{"a":"guy","time":"2015-12-23T12:09:12.610Z","lvl":"INFO","msg":"undefined"}`
 
-### Context support
+* The pattern `logger.error(err)` is very common. This API embraces the requirenment, and makes an special management of it. But getting an error stack trace is not cheap. It only will be get and printed when `log.error` or `log.fatal` is used, so you can use `logger.info(new Error('User Not Found'));` to not print useless stackstraces for your bussiness logic errors. _You can override it, btw_
 
-Logops supports using a context holding information about a correlator (corr), transaction (trans) and operation (op).
-If you pass a context object as a first argument, those fields are also logged as separate fields.
+* With the rest of arguments is just like calling `console.log`. It will be serialized as the trace message. Easy to remember.
 
-```js
-var logger = require('logops');
-var context = {
-  corr: 'cbefb082-3429-4f5c-aafd-26b060d6a9fc',
-  trans: '110ec58a-a0f2-4ac4-8393-c866d813b8d1',
-  op: 'SendEMail'
-};
+## Context support
 
-logger.debug(context, 'This is an example');
-```
-
-If you are holding your context information in other places, like [Domains](http://nodejs.org/api/domain.html), you don't
-need to pass a context to __every__ log function. Simply override the `logger.getContext` method to let the logger to get it.
+Logops supports using global properties that will be merged with the specific ones defined in the call. Simply override the `logger.getContext` method to let the logger to get it.
 
 ```js
-var logger = require('logops');
+var logger = require('logops'),
+    hostname = require('os').hostname();
 
-logger.getContext = function getDomainContext() {
-  return require('domain').active.myContextObject;
+logger.getContext = function getContext() {
+  return {
+    hostname: hostname,
+    pid: process.pid
+  };
 }
 
-logger.debug('This is an example');
+logger.info({app: 'server'}, 'Startup');
+// {"hostname":"host.local","pid":35502,"app":"server","time":"2015-12-23T11:47:25.862Z","lvl":"INFO","msg":"Startup"}
 ```
 
-### Trace format
-
-This library incorporates three flavors of trace formatting:
-* "json": writes logs as JSON.
-* "pipe": writes logs separating fields with pipes. This is the default value in logops
-* "dev": for development, used if the 'de-facto' NODE_ENV variable is set to 'development'
-
-```js
-logger.format = logger.formatters.json;
-logger.info('This is an example: %d', 5, {key:"value");
-//output: {"time":"2015-06-11T08:36:16.628Z","lvl":"INFO","corr":null,"trans":null,"op":null,"msg":"This is an example: 5", "key: "value"}
-
-logger.format = logger.formatters.pipe;
-logger.info('This is an example: %d', 5, {key:"value");
-//output: time=2015-06-11T08:36:16.628Z | lvl=INFO | corr=n/a | trans=n/a | op=n/a | msg=This is an example: 5 { key: 'value' }
-
-logger.format = logger.formatters.dev;
-logger.info('This is an example: %d', 5, {key:"value"});
-//output: INFO This is an example: 5 { key: 'value' }
-```
-
-The "pipe" formatter uses "n/a" as the default value when a context field (corr, trans, op) is not found.
-You can change its value programmatically:
-
-```js
-logger.formatters.setNotAvailable('NA');
-logger.info('This is an example: %d', 5, {key:"value");
-//output: time=2015-06-11T08:36:16.628Z | lvl=INFO | corr=NA | trans=NA | op=NA | msg=This is an example: 5 { key: 'value' }
-```
-
-You can also set the format specifying the formatter with `LOGOPS_FORMAT` environment variable:
-
-```bash
-export LOGOPS_FORMAT=json
-```
-
-### Logger Level
+## Logger Level
 
 You can set the logging level at any time. All the disabled logging methods are replaced by a noop,
 so there is not any performance penalty at production using an undesired level
@@ -118,6 +86,45 @@ You can also set the logging level using the `LOGOPS_LEVEL` environment variable
 ```bash
 export LOGOPS_LEVEL=DEBUG
 ```
+
+## Trace format
+
+This library incorporates two flavors of trace formatting:
+* "json": writes logs as JSON. This is the **DEFAULT in v1.0.0**
+* "dev": for development. Used with 'de-facto' NODE_ENV variable is set to 'development'
+* "pipe": writes logs separating fields with pipes. **DEPRECATED in v1.0.0** 
+
+```js
+logger.format = logger.formatters.json;
+logger.info({key:"value"}, 'This is an example: %d', 5);
+// {"key":"value","time":"2015-12-23T11:55:27.041Z","lvl":"INFO","msg":"This is an example: 5"}
+
+logger.info({key:"value"}, 'This is an example: %d', 5);
+// INFO This is an example: 5
+// It only prints messages, but no context/properties
+
+logger.format = logger.formatters.pipe; //DEPRECATED in v1.0.0
+logger.info({key:"value"}, 'This is an example: %d', 5);
+// time=2015-12-23T11:57:24.879Z | lvl=INFO | corr=n/a | trans=n/a | op=n/a | msg=This is an example: 5
+
+```
+You can also set the format specifying the formatter with `LOGOPS_FORMAT` environment variable:
+
+```bash
+export LOGOPS_FORMAT=json
+# export LOGOPS_FORMAT=dev
+```
+
+## Advanced Usage
+
+### Trace format
+
+You can override the format function and manage by yourself the formatting taking into account your own environment variables by
+overriding the `logger.format` function
+
+### Error Stack traces
+
+Override `logger.formatters.getFullErrorStack` with your requirenments
 
 ### Writing to files
 
@@ -148,34 +155,6 @@ node index.js > out.log
 ```
 
 Please read carefully in the node documentation how the `stdout`/`stderr` stream behaves [regarding synchronous/asynchronous writing](https://nodejs.org/api/process.html#process_process_stdout)
-
-## Customization
-
-### Trace format
-
-You can override the format function and manage by yourself the formatting taking into account your own environment variables by
-overriding the `logger.format` function
-
-```js
-var logger = require('logops');
-/**
- * Return a String representation for a trace.
- * @param {String} level One of the following values
- *      ['DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL']
- * @param {Object} context Additional information to add to the trace
- * @param {String} message The main message to be added to the trace
- * @param {Array} args More arguments provided to the log function
- *
- * @return {String} The trace formatted
- */
-logger.format = function myCustomFormat(level, context, message, args) {
-  var str = '';
-  //...
-  return str;
-};
-```
-
-### Output stream
 
 If you want to pipe the output stream to any other stream in your source code, or even write to files *(not recommended)*,
 you can override the stream used by this library

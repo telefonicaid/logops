@@ -2,114 +2,262 @@
 
 var logger = require('../lib/logops');
 
-describe('Format traces in JSON format', function() {
-  var context;
+describe('JSON format', function() {
   before(function() {
     logger.format = logger.formatters.json;
-    context = {};
   });
 
-  it('should log a simple message as JSON', function() {
-    var message = 'Sample Message';
-    var result = logger.format('INFO', context, message, []);
-    var resultJson = JSON.parse(result);
+  describe('Logging Messages', function() {
+    describe('without context', function() {
+      it('should log empty strings', function() {
+        logger.info('');
+        expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
+          msg: ''
+        }));
+      });
 
-    expect(resultJson.lvl).to.be.equal('INFO');
-    expect(resultJson.msg).to.be.equal(message);
+      it('should log undefined', function() {
+        logger.info();
+        expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
+          msg: 'undefined'
+        }));
+      });
 
-    expect(resultJson.corr).to.not.exist;
-    expect(resultJson.trans).to.not.exist;
-    expect(resultJson.op).to.not.exist;
+      it('should log null', function() {
+        logger.info(null);
+        expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
+          msg: 'null'
+        }));
+      });
 
-    var date = new Date(resultJson.time);
-    expect(date).to.exist;
+      it('should log empty arrays', function() {
+        logger.info([]);
+        expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
+          msg: '[]'
+        }));
+      });
+
+      it('should log objects representation', function() {
+        logger.info({}, {});
+        expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
+          msg: '{}'
+        }));
+      });
+
+      it('should log nothing but context', function() {
+        logger.info({});
+        expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
+          msg: 'undefined'
+        }));
+      });
+
+      it('should log dates', function() {
+        var now = new Date();
+        logger.info({}, now);
+        expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
+          msg: '' + now
+        }));
+      });
+
+      it('should nothing but context with a Data as context', function() {
+        logger.info(new Date());
+        expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
+          msg: 'undefined'
+        }));
+      });
+
+      it('should log booleans', function() {
+        logger.info(false);
+        expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
+          msg: 'false'
+        }));
+        logger.info(true);
+        expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
+          msg: 'true'
+        }));
+      });
+
+      it('should log strings', function() {
+        logger.info('Simple Message');
+        expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
+          msg: 'Simple Message'
+        }));
+      });
+
+      it('should log formatted strings', function() {
+        logger.info('Format %s %d %j', 'foo', 4, {bar:5});
+        expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
+          msg: 'Format foo 4 {"bar":5}'
+        }));
+      });
+
+      it('should log arrays', function() {
+        logger.info(['Sample', 'Array']);
+        expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
+          msg: "[ 'Sample', 'Array' ]"
+        }));
+      });
+
+      it('should log extra simple params', function() {
+        logger.info('Format', 'foo', 4, {bar:5});
+        expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
+          msg: 'Format foo 4 { bar: 5 }'
+        }));
+      });
+    });
+
+    describe('with context', function() {
+      it('should append global context', function() {
+        sandbox.stub(logger, 'getContext').returns({
+          corr: null,
+          trans: undefined, //must be dropped
+          op: 'OP'
+        });
+        logger.info('Simple Message');
+        expect(logger._lastTrace).to.be.eql(JSON.stringify({
+          corr: null,
+          op: 'OP',
+          time: '1970-01-01T00:00:00.000Z',
+          lvl: 'INFO',
+          msg: 'Simple Message'
+        }));
+      });
+
+      it('should append local context to global context', function() {
+        sandbox.stub(logger, 'getContext').returns({
+          corr: null,
+          trans: undefined, //must be dropped
+          op: 'OP'
+        });
+
+        logger.info({
+              corr: 'corr',
+              custom: 'custom'
+            },
+            'Simple Message'
+        );
+
+        expect(logger._lastTrace).to.be.equal(JSON.stringify({
+          corr: 'corr',
+          op: 'OP',
+          custom: 'custom',
+          time: '1970-01-01T00:00:00.000Z',
+          lvl: 'INFO',
+          msg: 'Simple Message'
+        }));
+      });
+
+
+      it('should not overwrite logops internal properties', function() {
+        sandbox.stub(logger, 'getContext').returns({
+          time: 'contextTime',
+          lvl: 'contextLevel',
+          msg: 'contextMsg'
+        });
+
+        logger.info({
+              time: 'logTime',
+              lvl: 'logLevel',
+              msg: 'logMsg'
+            },
+            'Simple Message'
+        );
+
+        expect(logger._lastTrace).to.be.equal(JSON.stringify({
+          time: '1970-01-01T00:00:00.000Z',
+          lvl: 'INFO',
+          msg: 'Simple Message'
+        }));
+      });
+    });
   });
 
-  it('should log a custom object as JSON', function() {
-    var message = {
-      number: 42,
-      date: new Date(),
-      nested: {
-        john: 'snow',
-        stannis: 'baratheon'
-      }
-    };
-    var result = logger.format('INFO', context, '', [message]);
-    var resultJson = JSON.parse(result);
-    expect(resultJson.number).to.be.equal(42);
+  describe('Logging Errors', function() {
+    it('should log errors without stacktrace', function() {
+      var error = new Error('foo');
+      error.custom = 'custom';
+      logger.info(error);
+      expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
+        err: {
+          custom: 'custom',
+          message: 'foo',
+          name: 'Error',
+          constructor: 'Error',
+          stack: 'Error: foo'
+        },
+        msg: 'Error: foo'
+      }));
+    });
 
-    var date = new Date(resultJson.date);
-    expect(date).to.exist;
+    it('should log errors with stacktrace', function() {
+      var error = new Error('foo');
+      error.custom = 'custom';
+      logger.error(error);
+      expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'ERROR',
+        err: {
+          custom: 'custom',
+          message: 'foo',
+          name: 'Error',
+          constructor: 'Error',
+          stack: error.stack
+        },
+        msg: 'Error: foo'
+      }));
+    });
 
-    expect(resultJson.nested.john).to.be.equal('snow');
-    expect(resultJson.nested.stannis).to.be.equal('baratheon');
-  });
+    it('should log errors with stacktrace and cause', function() {
+      var error = new Error('foo'), error2 = new Error('bar'), error3 = new Error('baz');
+      error.custom = 'custom';
+      error2.cause = sandbox.stub().returns(error3);
+      error.cause = sandbox.stub().returns(error2);
+      logger.error(error);
+      expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'ERROR',
+        err: {
+          custom: 'custom',
+          message: 'foo',
+          name: 'Error',
+          constructor: 'Error',
+          stack: [error.stack, 'Caused by: ' + error2.stack, 'Caused by: ' + error3.stack].join('\n'),
+        },
+        msg: 'Error: foo'
+      }));
+    });
 
-  it('should log two custom objects as JSON', function() {
-    var obj1 = {a: 1};
-    var obj2 = {b: 2};
+    it('should log extra errors', function() {
+      logger.info('Format', new Error('foo'));
+      expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
+        msg: 'Format [Error: foo]'
+      }));
+    });
 
-    var result = logger.format('INFO', context, '', [obj1, obj2]);
-    var resultJson = JSON.parse(result);
-    expect(resultJson.a).to.be.equal(1);
-    expect(resultJson.b).to.be.equal(2);
-  });
+    it('should log errors with extra information without stacktrace', function() {
+      var err = new Error('foo');
+      logger.info(err, 'Format %s', 'works');
+      expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
+        err: {
+          message: 'foo',
+          name: 'Error',
+          constructor: 'Error',
+          stack: 'Error: foo'
+        },
+        msg: 'Format works'
+      }));
+    });
 
-  it('should log as JSON with a context', function() {
-    var message = 'Sample Message';
-
-    var context = {
-      corr: 'fake_corr',
-      trans: 'fake_trans',
-      op: 'fake_op'
-    };
-    var result = logger.format('INFO', context, message, []);
-    var resultJson = JSON.parse(result);
-
-    expect(resultJson.corr).to.be.equal('fake_corr');
-    expect(resultJson.trans).to.be.equal('fake_trans');
-    expect(resultJson.op).to.be.equal('fake_op');
-  });
-
-  it('should log as JSON with extra args', function() {
-    var message = 'Sample Message %d %s';
-    var result = logger.format('INFO', context, message, [1234, 'fakearg']);
-    var resultJson = JSON.parse(result);
-
-    expect(resultJson.msg).to.be.equal('Sample Message 1234 fakearg');
-  });
-
-  it('should log as JSON with placeholders', function() {
-    var obj1 = {a: 1};
-    var obj2 = {b: 2};
-
-    var result = logger.format('INFO', context, 'placeholder %d %j', [123, obj1, obj2]);
-    var resultJson = JSON.parse(result);
-
-    expect(resultJson.msg).to.equal('placeholder 123 {\"a\":1}');
-    expect(resultJson.a).to.not.exist; // the first object goes to the placeholder
-    expect(resultJson.b).to.be.equal(2);
-  });
-
-  it('should log as JSON with placeholders', function() {
-    var obj1 = {a: 1};
-    var obj2 = {toJSON: function() { return {b: 2}; }};
-
-    var result = logger.format('INFO', context, 'placeholder %d %j', [123, obj1, obj2]);
-    var resultJson = JSON.parse(result);
-
-    expect(resultJson.msg).to.equal('placeholder 123 {\"a\":1}');
-    expect(resultJson.a).to.not.exist; // the first object goes to the placeholder
-    expect(resultJson.b).to.be.equal(2);
-  });
-
-  it('should log as JSON with not literal objects and no placeholders', function() {
-    var obj1 = {a: 1};
-
-    var result = logger.format('INFO', context, 'no placeholders', [1, 2, obj1, 3, 4]);
-    var resultJson = JSON.parse(result);
-
-    expect(resultJson.msg).to.equal('no placeholders 1 2 3 4');
-    expect(resultJson.a).to.be.equal(1);
+    it('should log errors with extra information and cause', function() {
+      var error = new Error('foo'), error2 = new Error('bar'), error3 = new Error('baz');
+      error2.cause = sandbox.stub().returns(error3);
+      error.cause = sandbox.stub().returns(error2);
+      logger.fatal(error, 'Format %s', 'works');
+      expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'FATAL',
+        err: {
+          message: 'foo',
+          name: 'Error',
+          constructor: 'Error',
+          stack: [error.stack, 'Caused by: ' + error2.stack, 'Caused by: ' + error3.stack].join('\n')
+        },
+        msg: 'Format works'
+      }));
+    });
   });
 });
