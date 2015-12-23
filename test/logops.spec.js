@@ -1,417 +1,235 @@
 'use strict';
 
-var logUtils = require('./utils'),
-    logger = null,
-    logopsPath = '../lib/logops',
-    levels = ['debug', 'info', 'warn', 'error', 'fatal'],
-    lastTraces = [],
-    DEFAULT_NOT_AVAILABLE = 'n/a';
+var logopsPath = '../lib/logops',
+    logger =require(logopsPath);
 
-var streamStub = {
-  write: function(trace) {
-    lastTraces.push(logUtils.parseLog(trace));
-  }
-};
+describe('Select log format with an env variable', function() {
 
-describe('Logger Unit Tests', function() {
-
-  before(function(done) {
-    process.env.NODE_ENV = 'production';
-    logger = require(logopsPath);
-    logger.stream = streamStub;
-    logger.format = logger.formatters.pipe;
-    done();
-  });
-
-  describe('Logs with default level', function() {
-
-    beforeEach(function(done) {
-      lastTraces = [];
-      done();
-    });
-
-    it(' write all kind of traces only with a message.', function(done) {
-      var message = 'Sample Message.';
-      var streamSpy = sinon.spy(streamStub, 'write');
-
-      levels.forEach(function(level) {
-        logger[level](message);
-        if (level === 'debug') {
-          expect(streamSpy.callCount).to.be.equal(0);
-        } else {
-          expect(streamSpy.calledOnce).to.be.true;
-        }
-        streamSpy.reset();
-      });
-      expect(lastTraces).to.have.length(4);
-      lastTraces.forEach(function(trace) {
-        expect(trace.lvl).to.not.equal('DEBUG');
-        expect(trace.corr).to.be.equal(DEFAULT_NOT_AVAILABLE);
-        expect(trace.trans).to.be.equal(DEFAULT_NOT_AVAILABLE);
-        expect(trace.op).to.be.equal(DEFAULT_NOT_AVAILABLE);
-        expect(trace.msg).to.be.equal(message);
-      });
-      done();
-
-    });
-
-    it(' write all kind of traces only with a message with format', function(done) {
-      var streamSpy = sinon.spy(streamStub, 'write');
-
-      levels.forEach(function(level) {
-        logger[level]('Request %s %d %j', 'is', 5, {key: 'value'});
-        if (level === 'debug') {
-          expect(streamSpy.callCount).to.be.equal(0);
-        } else {
-          expect(streamSpy.calledOnce).to.be.true;
-        }
-        streamSpy.reset();
-      });
-      expect(lastTraces).to.have.length(4);
-      lastTraces.forEach(function(trace) {
-        expect(trace.lvl).to.not.equal('DEBUG');
-        expect(trace.corr).to.be.equal(DEFAULT_NOT_AVAILABLE);
-        expect(trace.trans).to.be.equal(DEFAULT_NOT_AVAILABLE);
-        expect(trace.op).to.be.equal(DEFAULT_NOT_AVAILABLE);
-        expect(trace.msg).to.be.equal('Request is 5 {"key":"value"}');
-      });
-      done();
-
-    });
-
-    it(' write all kind of traces with message and context', function(done) {
-      var streamSpy = sinon.spy(streamStub, 'write');
-      var message = 'Sample Message.';
-      var context = {
-        corr: 'cbefb082-3429-4f5c-aafd-26b060d6a9fc',
-        trans: 'cbefb082-3429-4f5c-aafd-26b060d6a9fc',
-        op: 'SendEMail'
-      };
-
-      levels.forEach(function(level) {
-        logger[level](context, message);
-        if (level === 'debug') {
-          expect(streamSpy.callCount).to.be.equal(0);
-        } else {
-          expect(streamSpy.calledOnce).to.be.true;
-        }
-        streamSpy.reset();
-      });
-      expect(lastTraces).to.have.length(4);
-      lastTraces.forEach(function(trace) {
-        expect(trace.lvl).to.not.equal('DEBUG');
-        expect(trace.corr).to.be.equal(context.corr);
-        expect(trace.trans).to.be.equal(context.trans);
-        expect(trace.op).to.be.equal(context.op);
-        expect(trace.msg).to.be.equal(message);
-      });
-      done();
-
-    });
-
-    it(' write all kind of traces with message format and context', function(done) {
-      var streamSpy = sinon.spy(streamStub, 'write');
-      var context = {
-        corr: 'cbefb082-3429-4f5c-aafd-26b060d6a9fc',
-        trans: 'cbefb082-3429-4f5c-aafd-26b060d6a9fc',
-        op: 'SendEMail'
-      };
-
-      levels.forEach(function(level) {
-        logger[level](context, 'Request %s %d %j', 'is', 5, {key: 'value'});
-        if (level === 'debug') {
-          expect(streamSpy.callCount).to.be.equal(0);
-        } else {
-          expect(streamSpy.calledOnce).to.be.true;
-        }
-        streamSpy.reset();
-      });
-      expect(lastTraces).to.have.length(4);
-      lastTraces.forEach(function(trace) {
-        expect(trace.lvl).to.not.equal('DEBUG');
-        expect(trace.corr).to.be.equal(context.corr);
-        expect(trace.trans).to.be.equal(context.trans);
-        expect(trace.op).to.be.equal(context.op);
-        expect(trace.msg).to.be.equal('Request is 5 {"key":"value"}');
-      });
-      done();
-
-    });
-
-  });
-
-  describe('Logs with DEBUG level', function() {
-
-    before(function(done) {
-      logger.setLevel('DEBUG');
-      done();
-    });
-
-    beforeEach(function(done) {
-      lastTraces = [];
-      done();
-    });
-
-    it(' write all kind of traces only with a message.', function(done) {
-      var message = 'Sample Message.';
-      var streamSpy = sinon.spy(streamStub, 'write');
-
-      levels.forEach(function(level) {
-        logger[level](message);
-        expect(streamSpy.calledOnce).to.be.true;
-        streamSpy.reset();
-      });
-      expect(lastTraces).to.have.length(5);
-      lastTraces.forEach(function(trace) {
-        expect(trace.corr).to.be.equal(DEFAULT_NOT_AVAILABLE);
-        expect(trace.trans).to.be.equal(DEFAULT_NOT_AVAILABLE);
-        expect(trace.op).to.be.equal(DEFAULT_NOT_AVAILABLE);
-        expect(trace.msg).to.be.equal(message);
-      });
-      done();
-
-    });
-
-    it(' write all kind of traces only with a message with format', function(done) {
-      var streamSpy = sinon.spy(streamStub, 'write');
-
-      levels.forEach(function(level) {
-        logger[level]('Request %s %d %j', 'is', 5, {key: 'value'});
-        expect(streamSpy.calledOnce).to.be.true;
-        streamSpy.reset();
-      });
-      expect(lastTraces).to.have.length(5);
-      lastTraces.forEach(function(trace) {
-        expect(trace.corr).to.be.equal(DEFAULT_NOT_AVAILABLE);
-        expect(trace.trans).to.be.equal(DEFAULT_NOT_AVAILABLE);
-        expect(trace.op).to.be.equal(DEFAULT_NOT_AVAILABLE);
-        expect(trace.msg).to.be.equal('Request is 5 {"key":"value"}');
-      });
-      done();
-
-    });
-
-    it(' write all kind of traces with message and context', function(done) {
-      var streamSpy = sinon.spy(streamStub, 'write');
-      var message = 'Sample Message.';
-      var context = {
-        corr: 'cbefb082-3429-4f5c-aafd-26b060d6a9fc',
-        trans: 'cbefb082-3429-4f5c-aafd-26b060d6a9fc',
-        op: 'SendEMail'
-      };
-
-      levels.forEach(function(level) {
-        logger[level](context, message);
-        expect(streamSpy.calledOnce).to.be.true;
-        streamSpy.reset();
-      });
-      expect(lastTraces).to.have.length(5);
-      lastTraces.forEach(function(trace) {
-        expect(trace.corr).to.be.equal(context.corr);
-        expect(trace.trans).to.be.equal(context.trans);
-        expect(trace.op).to.be.equal(context.op);
-        expect(trace.msg).to.be.equal(message);
-      });
-      done();
-
-    });
-
-    it(' write all kind of traces with message format and context', function(done) {
-      var streamSpy = sinon.spy(streamStub, 'write');
-      var context = {
-        corr: 'cbefb082-3429-4f5c-aafd-26b060d6a9fc',
-        trans: 'cbefb082-3429-4f5c-aafd-26b060d6a9fc',
-        op: 'SendEMail'
-      };
-
-      levels.forEach(function(level) {
-        logger[level](context, 'Request %s %d %j', 'is', 5, {key: 'value'});
-        expect(streamSpy.calledOnce).to.be.true;
-        streamSpy.reset();
-      });
-      expect(lastTraces).to.have.length(5);
-      lastTraces.forEach(function(trace) {
-        expect(trace.corr).to.be.equal(context.corr);
-        expect(trace.trans).to.be.equal(context.trans);
-        expect(trace.op).to.be.equal(context.op);
-        expect(trace.msg).to.be.equal('Request is 5 {"key":"value"}');
-      });
-      done();
-
-    });
-
-
-    after(function(done) {
-      logger.setLevel(null);
-      done();
-    });
-
-  });
-
-
-  describe('Logs with WARN level', function() {
-
-    before(function(done) {
-      logger.setLevel('WARN');
-      done();
-    });
-
-    beforeEach(function(done) {
-      lastTraces = [];
-      done();
-    });
-
-    it(' write all kind of traces only with a message.', function(done) {
-      var message = 'Sample Message.';
-      var streamSpy = sinon.spy(streamStub, 'write');
-
-      levels.forEach(function(level) {
-        logger[level](message);
-        if (level === 'debug' || level === 'info') {
-          expect(streamSpy.callCount).to.be.equal(0);
-        } else {
-          expect(streamSpy.calledOnce).to.be.true;
-        }
-        streamSpy.reset();
-      });
-      expect(lastTraces).to.have.length(3);
-      lastTraces.forEach(function(trace) {
-        expect(trace.lvl).to.not.equal('DEBUG');
-        expect(trace.lvl).to.not.equal('INFO');
-        expect(trace.corr).to.be.equal(DEFAULT_NOT_AVAILABLE);
-        expect(trace.trans).to.be.equal(DEFAULT_NOT_AVAILABLE);
-        expect(trace.op).to.be.equal(DEFAULT_NOT_AVAILABLE);
-        expect(trace.msg).to.be.equal(message);
-      });
-      done();
-
-    });
-
-    it(' write all kind of traces only with a message with format', function(done) {
-      var streamSpy = sinon.spy(streamStub, 'write');
-
-      levels.forEach(function(level) {
-        logger[level]('Request %s %d %j', 'is', 5, {key: 'value'});
-        if (level === 'debug' || level === 'info') {
-          expect(streamSpy.callCount).to.be.equal(0);
-        } else {
-          expect(streamSpy.calledOnce).to.be.true;
-        }
-        streamSpy.reset();
-      });
-      expect(lastTraces).to.have.length(3);
-      lastTraces.forEach(function(trace) {
-        expect(trace.lvl).to.not.equal('DEBUG');
-        expect(trace.lvl).to.not.equal('INFO');
-        expect(trace.corr).to.be.equal(DEFAULT_NOT_AVAILABLE);
-        expect(trace.trans).to.be.equal(DEFAULT_NOT_AVAILABLE);
-        expect(trace.op).to.be.equal(DEFAULT_NOT_AVAILABLE);
-        expect(trace.msg).to.be.equal('Request is 5 {"key":"value"}');
-      });
-      done();
-
-    });
-
-    it(' write all kind of traces with message and context', function(done) {
-      var streamSpy = sinon.spy(streamStub, 'write');
-      var message = 'Sample Message.';
-      var context = {
-        corr: 'cbefb082-3429-4f5c-aafd-26b060d6a9fc',
-        trans: 'cbefb082-3429-4f5c-aafd-26b060d6a9fc',
-        op: 'SendEMail'
-      };
-
-      levels.forEach(function(level) {
-        logger[level](context, message);
-        if (level === 'debug' || level === 'info') {
-          expect(streamSpy.callCount).to.be.equal(0);
-        } else {
-          expect(streamSpy.calledOnce).to.be.true;
-        }
-        streamSpy.reset();
-      });
-      expect(lastTraces).to.have.length(3);
-      lastTraces.forEach(function(trace) {
-        expect(trace.lvl).to.not.equal('DEBUG');
-        expect(trace.lvl).to.not.equal('INFO');
-        expect(trace.corr).to.be.equal(context.corr);
-        expect(trace.trans).to.be.equal(context.trans);
-        expect(trace.op).to.be.equal(context.op);
-        expect(trace.msg).to.be.equal(message);
-      });
-      done();
-
-    });
-
-    it(' write all kind of traces with message format and context', function(done) {
-      var streamSpy = sinon.spy(streamStub, 'write');
-      var context = {
-        corr: 'cbefb082-3429-4f5c-aafd-26b060d6a9fc',
-        trans: 'cbefb082-3429-4f5c-aafd-26b060d6a9fc',
-        op: 'SendEMail'
-      };
-
-      levels.forEach(function(level) {
-        logger[level](context, 'Request %s %d %j', 'is', 5, {key: 'value'});
-        if (level === 'debug' || level === 'info') {
-          expect(streamSpy.callCount).to.be.equal(0);
-        } else {
-          expect(streamSpy.calledOnce).to.be.true;
-        }
-        streamSpy.reset();
-      });
-      expect(lastTraces).to.have.length(3);
-      lastTraces.forEach(function(trace) {
-        expect(trace.lvl).to.not.equal('DEBUG');
-        expect(trace.lvl).to.not.equal('INFO');
-        expect(trace.corr).to.be.equal(context.corr);
-        expect(trace.trans).to.be.equal(context.trans);
-        expect(trace.op).to.be.equal(context.op);
-        expect(trace.msg).to.be.equal('Request is 5 {"key":"value"}');
-      });
-      done();
-
-    });
-
-  });
-
-  describe('Configurable log level', function() {
-    beforeEach(function(done) {
-      process.env.LOGOPS_LEVEL = 'ERROR'
-
-      delete require.cache[require.resolve(logopsPath)];
-      logger = require(logopsPath);
-      logger.stream = streamStub;
-      done();
-    });
-
-    it(' should use env variable (LOGOPS_LEVEL)', function(done) {
-      var message = 'Sample Message.';
-      var streamSpy = sinon.spy(streamStub, 'write');
-
-      levels.forEach(function(level) {
-        logger[level](message);
-        if (level === 'error' || level === 'fatal') {
-          expect(streamSpy.calledOnce).to.be.true;
-        } else {
-          expect(streamSpy.callCount).to.be.equal(0);
-        }
-        streamSpy.reset();
-      });
-
-      done();
-    });
-
-    after(function(done) {
-      delete process.env.LOGOPS_LEVEL;
-      done();
-    });
-  });
-
-  after(function(done) {
-    logger = null;
+  beforeEach(function () {
     delete require.cache[require.resolve(logopsPath)];
-    done();
   });
 
+  afterEach(function () {
+    delete require.cache[require.resolve(logopsPath)];
+    delete process.env.LOGOPS_FORMAT;
+    delete process.env.NODE_ENV;
+
+  });
+
+  it('should select "json" format', function () {
+    process.env.LOGOPS_FORMAT = 'json';
+    logger = require(logopsPath);
+
+    expect(logger.format).to.be.equal(logger.formatters.json);
+  });
+
+  it('should select "dev" format', function () {
+    process.env.LOGOPS_FORMAT = 'dev';
+    logger = require(logopsPath);
+
+    expect(logger.format).to.be.equal(logger.formatters.dev);
+  });
+
+  it('should select "pipe" format', function () {
+    process.env.LOGOPS_FORMAT = 'pipe';
+    logger = require(logopsPath);
+
+    expect(logger.format).to.be.equal(logger.formatters.pipe);
+  });
+
+  it('should select "dev" format when in development env', function () {
+    process.env.NODE_ENV = 'development';
+    logger = require(logopsPath);
+
+    expect(logger.format).to.be.equal(logger.formatters.dev);
+  });
+
+  it('should select "json" format when in other env', function () {
+    logger = require(logopsPath);
+
+    expect(logger.format).to.be.equal(logger.formatters.json);
+  });
+});
+
+describe('Select log level', function() {
+  var levels = ['DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL'],
+      DEFAULT_LEVEL = 'INFO';
+
+  beforeEach(function() {
+    delete require.cache[require.resolve(logopsPath)];
+    logger.stream = {write: function() {}};
+  });
+
+  afterEach(function() {
+    delete require.cache[require.resolve(logopsPath)];
+  });
+
+  it('should have INFO as default level', function() {
+    sandbox.spy(logger, 'format');
+
+    logger.debug(); logger.info(); logger.warn(); logger.error(); logger.fatal();
+
+    // Check our noop function name
+    expect(logger.debug.name).to.be.eql('noop');
+    expect(logger.info.name).not.to.be.eql('noop');
+    expect(logger.warn.name).not.to.be.eql('noop');
+    expect(logger.error.name).not.to.be.eql('noop');
+    expect(logger.fatal.name).not.to.be.eql('noop');
+
+    expect(logger.format).to.not.have.been.calledWith('DEBUG');
+    expect(logger.format).to.have.been.calledWith('INFO');
+    expect(logger.format).to.have.been.calledWith('WARN');
+    expect(logger.format).to.have.been.calledWith('ERROR');
+    expect(logger.format).to.have.been.calledWith('FATAL');
+  });
+
+  describe('with the API', function() {
+
+    beforeEach(function() {
+      sandbox.spy(logger, 'format');
+    });
+
+    afterEach(function() {
+      logger.setLevel(DEFAULT_LEVEL);
+    });
+
+    it('should set DEBUG level', function() {
+      logger.setLevel('DEBUG');
+
+      logger.debug(); logger.info(); logger.warn(); logger.error(); logger.fatal();
+
+      expect(logger.format).to.have.been.calledWith('DEBUG');
+      expect(logger.format).to.have.been.calledWith('INFO');
+      expect(logger.format).to.have.been.calledWith('WARN');
+      expect(logger.format).to.have.been.calledWith('ERROR');
+      expect(logger.format).to.have.been.calledWith('FATAL');
+    });
+
+    it('should set INFO level', function() {
+      logger.setLevel('info');
+
+      logger.debug(); logger.info(); logger.warn(); logger.error(); logger.fatal();
+
+      expect(logger.format).to.not.have.been.calledWith('DEBUG');
+      expect(logger.format).to.have.been.calledWith('INFO');
+      expect(logger.format).to.have.been.calledWith('WARN');
+      expect(logger.format).to.have.been.calledWith('ERROR');
+      expect(logger.format).to.have.been.calledWith('FATAL');
+    });
+
+    it('should set WARN level', function() {
+      logger.setLevel('warn');
+
+      logger.debug(); logger.info(); logger.warn(); logger.error(); logger.fatal();
+
+      expect(logger.format).to.not.have.been.calledWith('DEBUG');
+      expect(logger.format).to.not.have.been.calledWith('INFO');
+      expect(logger.format).to.have.been.calledWith('WARN');
+      expect(logger.format).to.have.been.calledWith('ERROR');
+      expect(logger.format).to.have.been.calledWith('FATAL');
+    });
+
+    it('should set ERROR level', function() {
+      logger.setLevel('ERROR');
+
+      logger.debug(); logger.info(); logger.warn(); logger.error(); logger.fatal();
+
+      expect(logger.format).to.not.have.been.calledWith('DEBUG');
+      expect(logger.format).to.not.have.been.calledWith('INFO');
+      expect(logger.format).to.not.have.been.calledWith('WARN');
+      expect(logger.format).to.have.been.calledWith('ERROR');
+      expect(logger.format).to.have.been.calledWith('FATAL');
+    });
+
+    it('should set FATAL level', function() {
+      logger.setLevel('fatal');
+
+      logger.debug(); logger.info(); logger.warn(); logger.error(); logger.fatal();
+
+      expect(logger.format).to.not.have.been.calledWith('DEBUG');
+      expect(logger.format).to.not.have.been.calledWith('INFO');
+      expect(logger.format).to.not.have.been.calledWith('WARN');
+      expect(logger.format).to.not.have.been.calledWith('ERROR');
+      expect(logger.format).to.have.been.calledWith('FATAL');
+    });
+  });
+
+  describe('with ENV vars', function() {
+
+    it('should set DEBUG level', function() {
+      process.env.LOGOPS_LEVEL = 'DEBUG';
+      logger = require(logopsPath);
+      sandbox.spy(logger, 'format');
+      logger.stream = {write: function() {}};
+
+
+      logger.debug(); logger.info(); logger.warn(); logger.error(); logger.fatal();
+
+      expect(logger.format).to.have.been.calledWith('DEBUG');
+      expect(logger.format).to.have.been.calledWith('INFO');
+      expect(logger.format).to.have.been.calledWith('WARN');
+      expect(logger.format).to.have.been.calledWith('ERROR');
+      expect(logger.format).to.have.been.calledWith('FATAL');
+    });
+
+    it('should set INFO level', function() {
+      process.env.LOGOPS_LEVEL = 'info';
+      logger = require(logopsPath);
+      sandbox.spy(logger, 'format');
+      logger.stream = {write: function() {}};
+
+      logger.debug(); logger.info(); logger.warn(); logger.error(); logger.fatal();
+
+      expect(logger.format).to.not.have.been.calledWith('DEBUG');
+      expect(logger.format).to.have.been.calledWith('INFO');
+      expect(logger.format).to.have.been.calledWith('WARN');
+      expect(logger.format).to.have.been.calledWith('ERROR');
+      expect(logger.format).to.have.been.calledWith('FATAL');
+    });
+
+    it('should set WARN level', function() {
+      process.env.LOGOPS_LEVEL = 'WARN';
+      logger = require(logopsPath);
+      sandbox.spy(logger, 'format');
+      logger.stream = {write: function() {}};
+
+      logger.debug(); logger.info(); logger.warn(); logger.error(); logger.fatal();
+
+      expect(logger.format).to.not.have.been.calledWith('DEBUG');
+      expect(logger.format).to.not.have.been.calledWith('INFO');
+      expect(logger.format).to.have.been.calledWith('WARN');
+      expect(logger.format).to.have.been.calledWith('ERROR');
+      expect(logger.format).to.have.been.calledWith('FATAL');
+    });
+
+    it('should set ERROR level', function() {
+      process.env.LOGOPS_LEVEL = 'ERROR';
+      logger = require(logopsPath);
+      sandbox.spy(logger, 'format');
+      logger.stream = {write: function() {}};
+
+      logger.debug(); logger.info(); logger.warn(); logger.error(); logger.fatal();
+
+      expect(logger.format).to.not.have.been.calledWith('DEBUG');
+      expect(logger.format).to.not.have.been.calledWith('INFO');
+      expect(logger.format).to.not.have.been.calledWith('WARN');
+      expect(logger.format).to.have.been.calledWith('ERROR');
+      expect(logger.format).to.have.been.calledWith('FATAL');
+    });
+
+    it('should set FATAL level', function() {
+      process.env.LOGOPS_LEVEL = 'fatal';
+      logger = require(logopsPath);
+      sandbox.spy(logger, 'format');
+      logger.stream = {write: function() {}};
+
+      logger.debug(); logger.info(); logger.warn(); logger.error(); logger.fatal();
+
+      expect(logger.format).to.not.have.been.calledWith('DEBUG');
+      expect(logger.format).to.not.have.been.calledWith('INFO');
+      expect(logger.format).to.not.have.been.calledWith('WARN');
+      expect(logger.format).to.not.have.been.calledWith('ERROR');
+      expect(logger.format).to.have.been.calledWith('FATAL');
+    });
+  });
 });
