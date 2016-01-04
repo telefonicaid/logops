@@ -44,7 +44,8 @@
     "performant"
   ],
   "dependencies": {
-    "colors": "^1.1.2"
+    "colors": "^1.1.2",
+    "serr": "^0.1.0"
   },
   "contributors": [
     "Juan Antonio Hernando Labajo <juanantonio.hernandolabajo@telefonica.com>",

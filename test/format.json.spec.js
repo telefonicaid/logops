@@ -182,8 +182,7 @@ describe('JSON format', function() {
           custom: 'custom',
           message: 'foo',
           name: 'Error',
-          constructor: 'Error',
-          stack: 'Error: foo'
+          constructor: 'Error'
         },
         msg: 'Error: foo'
       }));
@@ -217,7 +216,11 @@ describe('JSON format', function() {
           message: 'foo',
           name: 'Error',
           constructor: 'Error',
-          stack: [error.stack, 'Caused by: ' + error2.stack, 'Caused by: ' + error3.stack].join('\n'),
+          causes: [
+            { message: 'bar', name: 'Error', constructor: 'Error' },
+            { message: 'baz', name: 'Error', constructor: 'Error' }
+          ],
+          stack: [error.stack, 'Caused by: ' + error2.stack, 'Caused by: ' + error3.stack].join('\n')
         },
         msg: 'Error: foo'
       }));
@@ -237,8 +240,7 @@ describe('JSON format', function() {
         err: {
           message: 'foo',
           name: 'Error',
-          constructor: 'Error',
-          stack: 'Error: foo'
+          constructor: 'Error'
         },
         msg: 'Format works'
       }));
@@ -254,6 +256,10 @@ describe('JSON format', function() {
           message: 'foo',
           name: 'Error',
           constructor: 'Error',
+          causes: [
+            { message: 'bar', name: 'Error', constructor: 'Error' },
+            { message: 'baz', name: 'Error', constructor: 'Error' }
+          ],
           stack: [error.stack, 'Caused by: ' + error2.stack, 'Caused by: ' + error3.stack].join('\n')
         },
         msg: 'Format works'
