@@ -124,7 +124,7 @@ overriding the `logger.format` function
 
 ### Error Stack traces
 
-Override `logger.formatters.getFullErrorStack` with your requirenments
+Set `logger.formatters.stacktracesWith` array with the error levels that will print stacktraces. Default is `stacktracesWith: ['ERROR', 'FATAL']`
 
 ### Writing to files
 
