@@ -24,11 +24,13 @@
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R dot test/environment.js test/*.spec.js",
     "lint": "jscs lib && eslint lib",
     "test": "mocha -R spec test/environment.js test/*.spec.js",
-    "release": "release-it --github.release --changelogCommand=\"git log --pretty=format:'* %s (%h)' --no-merges [REV_RANGE]\"",
+    "changelog": "conventional-changelog -p jshint",
+    "release": "release-it -n -p --github.release --changelogCommand=\"npm run -s changelog\"",
     "prepublish": "npm run test && npm run lint"
   },
   "devDependencies": {
     "chai": "^3.0.0",
+    "conventional-changelog": "^0.5.3",
     "coveralls": "^2.11.2",
     "eslint": "^1.10.1",
     "istanbul": "^0.4.0",
