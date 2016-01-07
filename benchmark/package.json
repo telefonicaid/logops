@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run tee && npm run file && npm run null && rm out.log",
+    "file": "node index.js > out.log",
+    "null": "node index.js > /dev/null",
+    "tee": "node index.js | tee -a out.log > /dev/null"
   },
   "author": "",
   "license": "ISC",

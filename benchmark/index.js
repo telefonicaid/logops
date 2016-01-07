@@ -2,10 +2,6 @@ var Benchmark = require('benchmark');
 var logops = require('../');
 var bunyan = require('bunyan');
 
-var nullStream = {
-  write: function() {}
-};
-
 var logopsLogger;
 function setupLogops() {
   logops.getContext = function() {
@@ -16,7 +12,6 @@ function setupLogops() {
     };
   };
   logops.format = logops.formatters.json;
-  logops.stream = nullStream;
   logops.setLevel('info');
   logopsLogger = logops;
 }
@@ -24,8 +19,7 @@ function setupLogops() {
 var bunyanLogger;
 function setupBunyan() {
   bunyanLogger = bunyan.createLogger({
-    name: 'myapp',
-    stream: nullStream
+    name: 'myapp'
   });
   bunyanLogger.level('info')
 }
@@ -42,10 +36,10 @@ new Benchmark.Suite('Basic logging')
     })
     // add listeners
     .on('cycle', function(event) {
-      console.log(String(event.target));
+      process.stderr.write(String(event.target) + '\n');
     })
     .on('complete', function() {
-      console.log('%s: Fastest is %s', this.name, this.filter('fastest').map('name'));
+      process.stderr.write(this.name + ': Fastest is ' + this.filter('fastest').map('name') + '\n');
     })
     .run({ 'async': false });
 
@@ -58,10 +52,10 @@ new Benchmark.Suite('Disabled logging')
     })
     // add listeners
     .on('cycle', function(event) {
-      console.log(String(event.target));
+      process.stderr.write(String(event.target) + '\n');
     })
     .on('complete', function() {
-      console.log('%s: Fastest is %s', this.name, this.filter('fastest').map('name'));
+      process.stderr.write(this.name + ': Fastest is ' + this.filter('fastest').map('name') + '\n');
     })
     .run({ 'async': false });
 

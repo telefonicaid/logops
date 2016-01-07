@@ -1,6 +1,6 @@
 # logops
 
-Really simple and performant logger for node.js projects.
+Really simple and performant JSON logger for node.js.
 
 [![npm version](https://img.shields.io/npm/v/logops.svg)](http://badge.fury.io/js/logops)
 [![Build Status](https://img.shields.io/travis/telefonicaid/logops.svg)](https://travis-ci.org/telefonicaid/logops)
@@ -134,9 +134,7 @@ This approach is also compatible with [logrotate](http://linuxcommand.org/man_pa
 Therefore you don't need to put __anything__ in your source code relative to logs, and all is done at execution time depending on the deployment.
 
 __Recommended execution:__ Pipelining the stdout to [tee](http://en.wikipedia.org/wiki/Tee_(command)).
-With this configuration, you will not fail when the disk is full. It's also the best
-performant solution
-
+With this configuration, you will not fail when the disk is full
 
 ```bash
 # write all traces to out.log
@@ -164,26 +162,56 @@ var logger = require('logops');
 logger.stream = new MyOtherSuperStreamThatDoesGreatThingsExceptWriteToDisk();
 ```
 
+## History
+This project was created initially for logging using the now deprecated pipe format, used internally at Telefonica by some logging infrastructure deployments.
+Now we are switching to a new one one, based on documents and a NoSQL infrastructure, where the JSON format is the one that 
+fits best. We got inspired by the wonderful [`bunyan`](https://github.com/trentm/node-bunyan) project and made some little adjustments in our API
+to be compliant with it, to reduce developer learning curve, make our preexisting code compatible and keep (or even improve) [its great performance](https://www.loggly.com/blog/a-benchmark-of-five-node-js-logging-libraries/).
+  
+
 ## Benchmark
 A very basic [benchmark](./benchmark/index.js) with the most common use case has 
 been setup to compare with [`bunyan`](https://github.com/trentm/node-bunyan)
 
-Running on a MAC, 2,5 GHz Intel Core i5, 8 GB 1333 MHz DDR3
+Running on a MAC OS X Yosemite, 2,5 GHz Intel Core i5, 8 GB 1333 MHz DDR3, SSD disk, node 4.2.2
  
 ```
-# Basic logging
-# logger.info({custom: 'field'}, 'This is a String');
-logops x 102,280 ops/sec ±1.19% (83 runs sampled)
-bunyan x 52,445 ops/sec ±1.08% (84 runs sampled)
-Basic logging: Fastest is logops
+$ cd benchmark; npm start
+               
+> benchmarklogops@1.0.0 start /Users/javier/Documents/Proyectos/logops/benchmark
+> npm run tee && npm run file && npm run null && rm out.log
 
-# Disabled logging level
-# logger.debug({custom: 'field'}, 'This is a String');
-logops x 78,044,280 ops/sec ±0.99% (85 runs sampled)
-bunyan x 1,538,977 ops/sec ±1.05% (86 runs sampled)
+
+> benchmarklogops@1.0.0 tee /Users/javier/Documents/Proyectos/logops/benchmark
+> node index.js | tee -a out.log > /dev/null
+
+logops x 39,560 ops/sec ±3.00% (75 runs sampled)
+bunyan x 27,365 ops/sec ±2.23% (79 runs sampled)
+Basic logging: Fastest is logops
+logops x 73,150,310 ops/sec ±1.64% (79 runs sampled)
+bunyan x 1,569,549 ops/sec ±3.67% (78 runs sampled)
+Disabled logging: Fastest is logops
+
+> benchmarklogops@1.0.0 file /Users/javier/Documents/Proyectos/logops/benchmark
+> node index.js > out.log
+
+logops x 43,136 ops/sec ±1.31% (82 runs sampled)
+bunyan x 28,653 ops/sec ±1.05% (84 runs sampled)
+Basic logging: Fastest is logops
+logops x 80,439,813 ops/sec ±1.17% (85 runs sampled)
+bunyan x 1,645,447 ops/sec ±1.66% (85 runs sampled)
+Disabled logging: Fastest is logops
+
+> benchmarklogops@1.0.0 null /Users/javier/Documents/Proyectos/logops/benchmark
+> node index.js > /dev/null
+
+logops x 52,947 ops/sec ±1.80% (80 runs sampled)
+bunyan x 33,696 ops/sec ±0.96% (84 runs sampled)
+Basic logging: Fastest is logops
+logops x 77,479,942 ops/sec ±1.47% (79 runs sampled)
+bunyan x 1,411,108 ops/sec ±1.92% (85 runs sampled)
 Disabled logging: Fastest is logops
 ```
-
 
 ## License
 
