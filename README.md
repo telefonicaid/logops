@@ -164,6 +164,27 @@ var logger = require('logops');
 logger.stream = new MyOtherSuperStreamThatDoesGreatThingsExceptWriteToDisk();
 ```
 
+## Benchmark
+A very basic [benchmark](./benchmark/index.js) with the most common use case has 
+been setup to compare with [`bunyan`](https://github.com/trentm/node-bunyan)
+
+Running on a MAC, 2,5 GHz Intel Core i5, 8 GB 1333 MHz DDR3
+ 
+```
+# Basic logging
+# logger.info({custom: 'field'}, 'This is a String');
+logops x 102,280 ops/sec ±1.19% (83 runs sampled)
+bunyan x 52,445 ops/sec ±1.08% (84 runs sampled)
+Basic logging: Fastest is logops
+
+# Disabled logging level
+# logger.debug({custom: 'field'}, 'This is a String');
+logops x 78,044,280 ops/sec ±0.99% (85 runs sampled)
+bunyan x 1,538,977 ops/sec ±1.05% (86 runs sampled)
+Disabled logging: Fastest is logops
+```
+
+
 ## License
 
 Copyright 2014, 2015 [Telefonica Investigación y Desarrollo, S.A.U](http://www.tid.es)

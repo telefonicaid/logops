@@ -2,6 +2,7 @@
 coverage/
 report/
 test/
+benchmark/
 
 *.bak
 *.orig
