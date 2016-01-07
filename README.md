@@ -100,8 +100,8 @@ logger.info({key:"value"}, 'This is an example: %d', 5);
 // {"key":"value","time":"2015-12-23T11:55:27.041Z","lvl":"INFO","msg":"This is an example: 5"}
 
 logger.info({key:"value"}, 'This is an example: %d', 5);
-// INFO This is an example: 5
-// It only prints messages, but no context/properties
+// INFO This is an example: 5 { key: 'value' }
+// It only prints messages, but no context/properties get by logops.getContext()
 
 logger.format = logger.formatters.pipe; //DEPRECATED in v1.0.0
 logger.info({key:"value"}, 'This is an example: %d', 5);
