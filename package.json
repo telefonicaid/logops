@@ -47,6 +47,7 @@
   ],
   "dependencies": {
     "colors": "^1.1.2",
+    "json-stringify-safe": "^5.0.1",
     "serr": "^0.1.0"
   },
   "contributors": [
