@@ -75,24 +75,24 @@ describe('Development format', function() {
 
     it('should log objects representation', function() {
       logger.info({}, {});
-      expect(logger._lastTrace).to.be.eql('INFO  {} {}');
+      expect(logger._lastTrace).to.be.eql('INFO  {}');
     });
 
     it('should log nothing but context', function() {
       logger.info({});
-      expect(logger._lastTrace).to.be.eql('INFO  undefined {}');
+      expect(logger._lastTrace).to.be.eql('INFO  undefined');
     });
 
     it('should log dates', function() {
       var now = new Date();
       logger.info({}, now);
-      expect(logger._lastTrace).to.be.eql('INFO  ' + now + ' {}');
+      expect(logger._lastTrace).to.be.eql('INFO  ' + now);
     });
 
     it('should nothing but context with a Data as context', function() {
       var now = new Date();
       logger.info(now);
-      expect(logger._lastTrace).to.be.eql('INFO  undefined ' + now);
+      expect(logger._lastTrace).to.be.eql('INFO  undefined');
     });
 
     it('should log booleans', function() {
@@ -126,6 +126,22 @@ describe('Development format', function() {
       var ctx = {foo: 'bar'};
       logger.info(ctx, 'Hello %s!', 'darling');
       expect(logger._lastTrace).to.be.eql('INFO  Hello darling! ' + util.inspect(ctx));
+    });
+
+    it('should skip context information from trace', function() {
+      var prevOmit = logger.formatters.dev.omit,
+          prevGetContext = logger.getContext;
+
+      logger.getContext = function() { return { hostname: 'localhost' }; };
+
+      logger.formatters.dev.omit = ['hostname', 'pid'];
+
+      var ctx = { pid: 123, ip: '127.0.0.1' };
+      logger.info(ctx, 'Hello %s!', 'darling');
+      expect(logger._lastTrace).to.be.eql('INFO  Hello darling! { ip: \'127.0.0.1\' }');
+
+      logger.formatters.dev.omit = prevOmit;
+      logger.getContext = prevGetContext;
     });
   });
 

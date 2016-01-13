@@ -96,18 +96,18 @@ This library incorporates two flavors of trace formatting:
 
 ```js
 logger.format = logger.formatters.json;
-logger.info({key:"value"}, 'This is an example: %d', 5);
+logger.info({key:'value'}, 'This is an example: %d', 5);
 // {"key":"value","time":"2015-12-23T11:55:27.041Z","lvl":"INFO","msg":"This is an example: 5"}
 
-logger.info({key:"value"}, 'This is an example: %d', 5);
-// INFO This is an example: 5 { key: 'value' }
-// It only prints messages, but no context/properties get by logops.getContext()
+logger.format = logger.formatters.dev;
+logger.info({key:'value'}, 'This is an example: %d', 5);
+// INFO  This is an example: 5 { key: 'value' }
 
 logger.format = logger.formatters.pipe; //DEPRECATED in v1.0.0
-logger.info({key:"value"}, 'This is an example: %d', 5);
+logger.info({key:'value'}, 'This is an example: %d', 5);
 // time=2015-12-23T11:57:24.879Z | lvl=INFO | corr=n/a | trans=n/a | op=n/a | msg=This is an example: 5
-
 ```
+
 You can also set the format specifying the formatter with `LOGOPS_FORMAT` environment variable:
 
 ```bash
@@ -122,7 +122,24 @@ export LOGOPS_FORMAT=json
 You can override the format function and manage by yourself the formatting taking into account your own environment variables by
 overriding the `logger.format` function
 
-### Error Stack traces
+### Don't print specific properties with `dev` format 
+
+Omit some boring/repeated/always-the-same context properties from being logged with the `dev` formatter:
+
+```js
+logger.format = logger.formatters.dev;
+logger.getContext = () => ({ pid: process.pid });
+logger.info({key:'value', ip:'127.0.0.1'}, 'This is an example: %d', 5);
+// INFO  This is an example: 5 { pid: 123342, key: 'value', ip: '127.0.0.1' }
+
+// Specify the context fields to omit as an array
+logger.formatters.dev.omit = ['pid', 'ip'];
+
+logger.info({key:'value', ip:'127.0.0.1'}, 'This is an example: %d', 5);
+// INFO  This is an example: 5 { key: 'value' }
+```
+
+### Don't print Error Stack traces
 
 Set `logger.formatters.stacktracesWith` array with the error levels that will print stacktraces. Default is `stacktracesWith: ['ERROR', 'FATAL']`
 
