@@ -9,7 +9,7 @@ describe('Pipe format', function() {
 
   describe('Logging Messages', function() {
     beforeEach(function() {
-      sandbox.stub(logger, 'getContext').returns({});
+      sandbox.stub(logger, 'getContext').returns();
     });
 
     it('should log empty strings', function() {
@@ -151,6 +151,30 @@ describe('Pipe format', function() {
       logger.info(new Error('foo'), 'Format %s', 'works');
       expect(logger._lastTrace).to.be.eql(
           'time=1970-01-01T00:00:00.000Z | lvl=INFO | corr=n/a | trans=n/a | op=n/a | msg=Format works [Error: foo]'
+      );
+    });
+
+    it('should log dynamic context properties', function() {
+      logger.info({ srv: 'Service', subsrv: 'Subservice'}, 'Format %s', 'works');
+      expect(logger._lastTrace).to.be.eql(
+          'time=1970-01-01T00:00:00.000Z | lvl=INFO | corr=n/a | trans=n/a | op=n/a | srv=Service | subsrv=Subservice | msg=Format works'
+      );
+    });
+
+    it('should use corr, trans, op from context properties', function() {
+      logger.info({ corr: 1, trans: 2, op: '3', srv: 'Service' }, 'Format %s', 'works');
+      expect(logger._lastTrace).to.be.eql(
+          'time=1970-01-01T00:00:00.000Z | lvl=INFO | corr=1 | trans=2 | op=3 | srv=Service | msg=Format works'
+      );
+    });
+
+    it('should use corr, trans, op from global context', function() {
+      logger.getContext = function() {
+        return { corr: 1, trans: 2, op: 'original'};
+      };
+      logger.info({ corr: 999, op: 'override', srv: 'Service' }, 'Format %s', 'works');
+      expect(logger._lastTrace).to.be.eql(
+          'time=1970-01-01T00:00:00.000Z | lvl=INFO | corr=999 | trans=2 | op=override | srv=Service | msg=Format works'
       );
     });
 
