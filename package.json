@@ -25,12 +25,11 @@
     "lint": "jscs lib && eslint lib",
     "test": "mocha -R spec test/environment.js test/*.spec.js",
     "changelog": "conventional-changelog -p jshint",
-    "release": "release-it -n -p --github.release --changelogCommand=\"npm run -s changelog\"",
-    "prepublish": "npm run test && npm run lint"
+    "release": "release-it -n -p --github.release --changelogCommand=\"npm run -s changelog\""
   },
   "devDependencies": {
     "chai": "^3.0.0",
-    "conventional-changelog": "^1.1.0",
+    "conventional-changelog-cli": "^1.1.0",
     "coveralls": "^2.11.2",
     "eslint": "^2.2.0",
     "istanbul": "^0.4.0",
