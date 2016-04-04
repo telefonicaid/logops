@@ -155,11 +155,13 @@ With this configuration, you will not fail when the disk is full
 
 ```bash
 # write all traces to out.log
+set -o pipefail
 node index.js | tee -a out.log > /dev/null
 ```
 
 ```bash
 # write error and fatal traces to error.log and all traces to out.log (using json formatter)
+set -o pipefail
 LOGOPS_FORMAT=json node index.js | tee >(grep -a -F -e '"lvl":"ERROR"' -e '"lvl":"FATAL"' > error.log) > out.log
 ```
 
