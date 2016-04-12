@@ -4,7 +4,7 @@ Really simple and performant JSON logger for node.js.
 
 [![npm version](https://img.shields.io/npm/v/logops.svg)](http://badge.fury.io/js/logops)
 [![Build Status](https://img.shields.io/travis/telefonicaid/logops.svg)](https://travis-ci.org/telefonicaid/logops)
-[![Coveralls branch](https://img.shields.io/coveralls/telefonicaid/logops/master.svg)](https://coveralls.io/r/telefonicaid/logops?branch=develop)
+[![Coveralls branch](https://img.shields.io/coveralls/telefonicaid/logops/develop.svg)](https://coveralls.io/r/telefonicaid/logops?branch=develop)
 [![Dependency Status](https://img.shields.io/gemnasium/telefonicaid/logops.svg)](https://gemnasium.com/telefonicaid/logops)
 
 ## Installation
