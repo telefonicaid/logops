@@ -188,6 +188,23 @@ describe('JSON format', function() {
       }));
     });
 
+    it('should not use err.toString to serialize the message', function() {
+      var error = new Error('foo');
+      error.toString = function() {
+        return 'Overwrite';
+      };
+
+      logger.info(error);
+      expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
+        err: {
+          message: 'foo',
+          name: 'Error',
+          constructor: 'Error'
+        },
+        msg: 'Error: foo'
+      }));
+    });
+
     it('should log errors with stacktrace', function() {
       var error = new Error('foo');
       error.custom = 'custom';
