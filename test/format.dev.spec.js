@@ -206,5 +206,15 @@ describe('Development format', function() {
       ].join('\n')));
     });
 
+    it('should not use err.toString to serialize the message', function() {
+      var error = new Error('foo');
+      error.toString = function() {
+        return 'Overwrite';
+      };
+
+      logger.info(error);
+      expect(logger._lastTrace).to.be.eql(pad('INFO  Error: foo'));
+    });
+
   });
 });
