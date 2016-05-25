@@ -25,7 +25,7 @@
     "lint": "jscs lib && eslint lib",
     "test": "mocha -R spec test/environment.js test/*.spec.js",
     "changelog": "conventional-changelog -p jshint",
-    "release": "release-it -n -p --github.release --changelogCommand=\"npm run -s changelog\""
+    "release": "release-it"
   },
   "devDependencies": {
     "chai": "^3.0.0",
@@ -33,7 +33,7 @@
     "coveralls": "^2.11.2",
     "eslint": "^2.2.0",
     "istanbul": "^0.4.0",
-    "jscs": "^2.6.0",
+    "jscs": "^3.0.3",
     "mocha": "^2.2.5",
     "release-it": "^2.3.1",
     "sinon": "^1.15.0",
