@@ -19,6 +19,6 @@
 
 5. Try to squash your commits (optional)
 
-6. Make a PR to the develop branch
+6. Make a PR to the master branch
 
 7. Thanks a lot!
