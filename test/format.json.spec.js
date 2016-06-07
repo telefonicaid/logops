@@ -233,7 +233,7 @@ describe('JSON format', function() {
           message: 'foo',
           name: 'Error',
           constructor: 'Error',
-          causes: [
+          $$causes: [
             { message: 'bar', name: 'Error', constructor: 'Error' },
             { message: 'baz', name: 'Error', constructor: 'Error' }
           ],
@@ -273,7 +273,7 @@ describe('JSON format', function() {
           message: 'foo',
           name: 'Error',
           constructor: 'Error',
-          causes: [
+          $$causes: [
             { message: 'bar', name: 'Error', constructor: 'Error' },
             { message: 'baz', name: 'Error', constructor: 'Error' }
           ],
