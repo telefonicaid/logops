@@ -87,6 +87,11 @@ You can also set the logging level using the `LOGOPS_LEVEL` environment variable
 export LOGOPS_LEVEL=DEBUG
 ```
 
+You can get the logging level using the `getLevel()` function of the logger:
+```
+currentLevel = logger.getLevel();
+```
+
 ## Trace format
 
 This library incorporates two flavors of trace formatting:
