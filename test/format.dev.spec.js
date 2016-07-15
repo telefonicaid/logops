@@ -149,6 +149,12 @@ describe('Development format', function() {
     function pad(str) {
       return str.replace(new RegExp('\r?\n','g'), '\n      ')
     }
+
+    function dropFirstLine(str) {
+      var arr = str.split('\n');
+      arr.shift();
+      return arr.join('\n');
+    }
     var colorsEnabled = colors.enabled;
     before(function() {
       colors.enabled = false;
@@ -159,14 +165,16 @@ describe('Development format', function() {
 
     it('should log errors without stacktrace', function() {
       var error = new Error('foo');
+      error.custom = true;
       logger.info(error);
-      expect(logger._lastTrace).to.be.eql(pad('INFO  Error: foo'));
+      expect(logger._lastTrace).to.be.eql(pad('INFO  Error: foo { custom: true }'));
     });
 
     it('should log errors with stacktrace', function() {
       var error = new Error('foo');
+      error.custom = true;
       logger.error(error);
-      expect(logger._lastTrace).to.be.eql(pad('ERROR Error: foo\n' + error.stack));
+      expect(logger._lastTrace).to.be.eql(pad('ERROR Error: foo { custom: true }\n' + dropFirstLine(error.stack)));
     });
 
     it('should log errors with stacktrace and cause', function() {
@@ -176,7 +184,7 @@ describe('Development format', function() {
       logger.error(error);
       expect(logger._lastTrace).to.be.eql(pad([
         'ERROR Error: foo',
-        error.stack,
+        dropFirstLine(error.stack),
         'Caused by: ' + error2.stack,
         'Caused by: ' + error3.stack
       ].join('\n')));
