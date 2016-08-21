@@ -1,0 +1,6 @@
+{
+  "extends": "tslint-config-typings",
+  "rules": {
+      "no-shadowed-variable": false
+  }
+}
