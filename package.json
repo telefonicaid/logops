@@ -1,7 +1,7 @@
 {
   "name": "logops",
   "description": "Simple and performant nodejs JSON logger",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "homepage": "https://github.com/telefonicaid/logops",
   "license": "Apache-2.0",
   "author": {
