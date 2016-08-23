@@ -26,7 +26,7 @@
     "lint": "jscs lib && eslint lib && tslint './{lib,test}/**/*.ts'",
     "test": "mocha -R spec test/environment.js test/*.spec.js",
     "changelog": "conventional-changelog -p jshint",
-    "postinstall": "./node_modules/.bin/typings install",
+    "typings": "typings",
     "release": "release-it"
   },
   "devDependencies": {
