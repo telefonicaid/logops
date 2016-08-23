@@ -2,7 +2,6 @@
   "non-interactive": true,
   "commitMessage": "[[CHORE]] Release %s",
   "changelogCommand": "npm run -s changelog",
-  "pkgFiles": ["package.json", "typings.json"],
   "src": {
     "beforeStageCommand": "npm run -s changelog"
   },

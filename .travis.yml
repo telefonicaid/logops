@@ -7,7 +7,6 @@ node_js:
   - "5"
 script: 
   - "npm run travis"
-  - "npm run typings install"
   - "npm run lint"
 cache:
   directories:
