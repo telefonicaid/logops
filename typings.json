@@ -1,0 +1,9 @@
+{
+  "name": "logops",
+  "main": "lib/logops.d.ts",
+  "homepage": "https://github.com/telefonicaid/logops",
+  "version": "1.0.1",
+  "globalDependencies": {
+    "node": "registry:dt/node#6.0.0+20160818175514"
+  }
+}

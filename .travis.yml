@@ -5,10 +5,13 @@ node_js:
   - "0.12"
   - "4"
   - "5"
-script: "npm run travis"
+script: 
+  - "npm run travis"
+  - "npm run lint"
 cache:
   directories:
     - node_modules
+    - typings
 notifications:
   email:
     - javier.mendiaracanardo@telefonica.com
