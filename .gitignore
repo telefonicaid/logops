@@ -5,6 +5,7 @@ typings/
 benchmark/out.log
 
 npm-debug.log
+test/logops.typings.js
 
 *.bak
 *.orig
