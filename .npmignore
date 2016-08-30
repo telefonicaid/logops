@@ -14,5 +14,10 @@ typings/
 .istanbul.yml
 .travis.yml
 
+tsconfig.json
+typings.json
+tslint.json
+release.json
+
 npm-debug.log
 CONTRIBUTING.md

@@ -1,5 +1,5 @@
 
-import logops = require('../lib/logops');
+import * as logops from '../lib/logops';
 
 let lvl: string = logops.getLevel();
 

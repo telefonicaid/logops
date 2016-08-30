@@ -4,7 +4,7 @@
  * The NODEJS stream where the logger will write string traces
  * Defaults to process.stdout
  */
-export let stream: any;
+export let stream: NodeJS.WritableStream;
 
 /**
  * Gets the current log level. The default level is INFO
