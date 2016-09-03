@@ -1,7 +1,7 @@
 
 import * as logops from '../lib/logops';
 
-let lvl: string = logops.getLevel();
+let lvl = logops.getLevel();
 
 logops.setLevel(lvl);
 

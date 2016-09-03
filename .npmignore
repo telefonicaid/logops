@@ -13,11 +13,11 @@ typings/
 .jscsrc
 .istanbul.yml
 .travis.yml
+.release.json
 
 tsconfig.json
 typings.json
 tslint.json
-release.json
 
 npm-debug.log
 CONTRIBUTING.md

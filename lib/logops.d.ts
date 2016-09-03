@@ -7,12 +7,13 @@
 export let stream: NodeJS.WritableStream;
 
 /**
- * Gets the current log level. The default level is INFO
- *
- * @return One of the following values
- *     ['DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL']
+ * Log levels
  */
-export function getLevel(): string;
+type Level = 'DEBUG' | 'INFO' | 'WARN' | 'ERROR' | 'FATAL';
+/**
+ * Gets the current log level. The default level is INFO
+ */
+export function getLevel(): Level;
 
 /**
  * Sets the enabled logging level.
@@ -25,7 +26,7 @@ export function getLevel(): string;
  *
  * @param level one of 'DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL'
  */
-export function setLevel(level: string): void;
+export function setLevel(level: Level): void;
 
 /**
  * Gets a global context that should be printed and merged with specific
@@ -319,7 +320,7 @@ interface Formatters {
      * Array of logger levels that will print error stacktraces 
      * Defaults to `['ERROR', 'FATAL']
      */
-    stacktracesWith: string[];
+    stacktracesWith: Level[];
     /**
      * Sets a value for those fields that are not available in the context. This field
      * will only be used in the 'pipes' formatter.
