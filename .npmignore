@@ -3,20 +3,19 @@ coverage/
 report/
 test/
 benchmark/
-typings/
 
 *.bak
 *.orig
 
-.gitignore
+.editorconfig
 .eslintrc
-.jscsrc
+.gitignore
 .istanbul.yml
-.travis.yml
+.jscsrc
 .release.json
+.travis.yml
 
 tsconfig.json
-typings.json
 tslint.json
 
 npm-debug.log
