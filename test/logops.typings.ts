@@ -5,15 +5,15 @@ let lvl = logops.getLevel();
 
 logops.setLevel(lvl);
 
-logops.getContext = function() {
-    return { a: 1 };
-};
+logops.setContextGetter(function() {
+  return { a: 1 };
+});
 
-logops.stream = process.stderr;
+logops.setStream(process.stderr);
 
-logops.format = logops.formatters.dev;
-logops.format = logops.formatters.json;
-logops.format = logops.formatters.pipe;
+logops.setFormat(logops.formatters.dev);
+logops.setFormat(logops.formatters.json);
+logops.setFormat(logops.formatters.pipe);
 
 logops.formatters.dev.omit = ['a'];
 logops.formatters.stacktracesWith = ['DEBUG'];
