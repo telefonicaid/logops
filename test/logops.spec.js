@@ -1,7 +1,7 @@
 'use strict';
 
 var logopsPath = '../lib/logops',
-    logger =require(logopsPath);
+    logger = require(logopsPath);
 
 describe('Select log format with an env variable', function() {
 
@@ -13,7 +13,6 @@ describe('Select log format with an env variable', function() {
     delete require.cache[require.resolve(logopsPath)];
     delete process.env.LOGOPS_FORMAT;
     delete process.env.NODE_ENV;
-
   });
 
   it('should select "json" format', function () {
@@ -239,5 +238,31 @@ describe('Get log format with the API', function() {
     logger.setLevel('DEBUG');
 
     expect(logger.getLevel()).to.equal('DEBUG');
+  });
+});
+
+describe('Setters', function() {
+  afterEach(function () {
+    delete require.cache[require.resolve(logopsPath)];
+  });
+
+  it('should set the context', function() {
+    function getContext() {
+      return { a: 1 };
+    }
+    logger.setContextGetter(getContext);
+    expect(logger.getContext).to.be.eql(getContext);
+  });
+
+  it('should set the format', function() {
+    var format = { };
+    logger.setFormat(format);
+    expect(logger.format).to.be.eql(format);
+  });
+
+  it('should set the stream', function() {
+    var stream = { };
+    logger.setStream(stream);
+    expect(logger.stream).to.be.eql(stream);
   });
 });
