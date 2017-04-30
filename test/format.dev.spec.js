@@ -4,7 +4,7 @@ var logger = require('../lib/logops'),
     util = require('util'),
     colors = require('colors/safe');
 
-describe('Development format', function() {
+describe.only('Development format', function() {
   var context = {};
   before(function() {
     logger.format = logger.formatters.dev;
@@ -86,7 +86,7 @@ describe('Development format', function() {
     it('should log dates', function() {
       var now = new Date();
       logger.info({}, now);
-      expect(logger._lastTrace).to.be.eql('INFO  ' + now);
+      expect(logger._lastTrace).to.be.eql('INFO  ' + util.format(now));
     });
 
     it('should nothing but context with a Data as context', function() {
