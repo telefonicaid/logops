@@ -86,7 +86,7 @@ describe('Development format', function() {
     it('should log dates', function() {
       var now = new Date();
       logger.info({}, now);
-      expect(logger._lastTrace).to.be.eql('INFO  ' + now);
+      expect(logger._lastTrace).to.be.eql('INFO  1970-01-01T00:00:00.000Z');
     });
 
     it('should nothing but context with a Data as context', function() {
@@ -191,8 +191,9 @@ describe('Development format', function() {
     });
 
     it('should log extra errors', function() {
-      logger.info('Format', new Error('foo'));
-      expect(logger._lastTrace).to.be.eql(pad('INFO  Format [Error: foo]'));
+      var error = new Error('foo');
+      logger.info('Format', error);
+      expect(logger._lastTrace).to.be.eql(pad('INFO  Format ' +  error.stack));
     });
 
     it('should log errors with extra information without stacktrace', function() {
