@@ -55,7 +55,7 @@ describe('JSON format', function() {
         var now = new Date();
         logger.info({}, now);
         expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
-          msg: '' + now
+          msg: '1970-01-01T00:00:00.000Z'
         }));
       });
 
@@ -244,9 +244,10 @@ describe('JSON format', function() {
     });
 
     it('should log extra errors', function() {
-      logger.info('Format', new Error('foo'));
+      var error = new Error('foo');
+      logger.info('Format', error);
       expect(logger._lastTrace).to.be.eql(JSON.stringify({time: '1970-01-01T00:00:00.000Z', lvl: 'INFO',
-        msg: 'Format [Error: foo]'
+        msg: 'Format ' + error.stack
       }));
     });
 

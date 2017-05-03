@@ -82,7 +82,7 @@ describe('Pipe format', function() {
       var now = new Date();
       logger.info({}, now);
       expect(logger._lastTrace).to.be.eql(
-          'time=1970-01-01T00:00:00.000Z | lvl=INFO | corr=n/a | trans=n/a | op=n/a | msg=' + now
+          'time=1970-01-01T00:00:00.000Z | lvl=INFO | corr=n/a | trans=n/a | op=n/a | msg=1970-01-01T00:00:00.000Z'
       );
     });
 
@@ -141,16 +141,18 @@ describe('Pipe format', function() {
     });
 
     it('should log extra errors', function() {
-      logger.info('Format', new Error('foo'));
+      var error = new Error('foo');
+      logger.info('Format', error);
       expect(logger._lastTrace).to.be.eql(
-          'time=1970-01-01T00:00:00.000Z | lvl=INFO | corr=n/a | trans=n/a | op=n/a | msg=Format [Error: foo]'
+          'time=1970-01-01T00:00:00.000Z | lvl=INFO | corr=n/a | trans=n/a | op=n/a | msg=Format ' + error.stack
       );
     });
 
     it('should log errors with extra information', function() {
-      logger.info(new Error('foo'), 'Format %s', 'works');
+      var error = new Error('foo');
+      logger.info(error, 'Format %s', 'works');
       expect(logger._lastTrace).to.be.eql(
-          'time=1970-01-01T00:00:00.000Z | lvl=INFO | corr=n/a | trans=n/a | op=n/a | msg=Format works [Error: foo]'
+          'time=1970-01-01T00:00:00.000Z | lvl=INFO | corr=n/a | trans=n/a | op=n/a | msg=Format works ' + error.stack
       );
     });
 
