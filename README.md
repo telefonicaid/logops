@@ -51,9 +51,10 @@ logger.fatal(new Error('Out of memory'), 'SYSTEM UNSTABLE. BYE');
 
 * With the rest of arguments is just like calling `console.log`. It will be serialized as the trace message. Easy to remember.
 
+
 ## Context support
 
-Logops supports using global properties that will be merged with the specific ones defined in the call. Simply override the `logger.getContext` method to let the logger to get it.
+Logops supports using global properties that will be merged with the specific ones defined in the call. Simply override the `logger.getContext` method to let the logger get it. See `logops.child` to see how to also create loggers with context 
 
 ```js
 var logger = require('logops'),
@@ -120,6 +121,29 @@ You can also set the format specifying the formatter with `LOGOPS_FORMAT` enviro
 export LOGOPS_FORMAT=json
 # export LOGOPS_FORMAT=dev
 ```
+
+## Child Loggers 
+You can create an specialized logger for a part of your app with bound static context/properties. The child logger
+will inherit its parent config: level, format, stream and context. If the parent logger has a context returned by `parent.getContext()`, the conflicting child logger context will take precedence
+```js
+let child = logger.child({component: 'client'});
+child.info('Startup');
+// {"component":"client","time":"2015-12-23T11:47:25.862Z","lvl":"INFO","msg":"Startup"}
+```
+
+**TIP: Using with express/connect**
+You can create a simply middleware to add a logger to every request with something like
+```js
+app.use(function(req, res, next) {
+  req.logger = logger.child({
+    requestId: uuid.v4()
+  });
+  next();
+});
+```
+So your `req.logger` will log the requestId to allow correlation of traces in your server traces.
+
+_Note: setting `child.getContext` property, will override the context used to create the logger and its merge with its parent one. So you can use it to create a context free logger_
 
 ## Advanced Usage
 

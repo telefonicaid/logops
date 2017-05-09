@@ -63,3 +63,6 @@ logops.fatal(new Error('Error'), 'Some');
 logops.fatal(new Error('Error'), 'Some %d', 1);
 logops.fatal('Some');
 logops.fatal('Some %d', 1);
+
+let child = logops.child();
+child.debug('Hi');

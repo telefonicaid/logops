@@ -242,14 +242,23 @@ describe('Get log format with the API', function() {
 });
 
 describe('Setters', function() {
-  afterEach(function () {
-    delete require.cache[require.resolve(logopsPath)];
+
+  var toSave= ['getContext', 'format', 'stream'];
+  var saved = {}, level;
+  beforeEach(function() {
+    toSave.forEach(prop => saved[prop] = logger[prop]);
+    level = logger.getLevel();
+  });
+
+  afterEach(function() {
+    toSave.forEach(prop => logger[prop] = saved[prop]);
+    logger.setLevel(level);
   });
 
   it('should set the context', function() {
     function getContext() {
       return { a: 1 };
-    }
+    };
     logger.setContextGetter(getContext);
     expect(logger.getContext).to.be.eql(getContext);
   });
@@ -264,5 +273,99 @@ describe('Setters', function() {
     var stream = { };
     logger.setStream(stream);
     expect(logger.stream).to.be.eql(stream);
+  });
+});
+
+describe('Child Loggers', function() {
+  // TODO: Move to environment.js, but causes more tests
+  // to fail. REview the test strategy, as now depends on the
+  // excution order
+  var toSave= ['getContext', 'format', 'stream'];
+  var saved = {}, level;
+  beforeEach(function() {
+    toSave.forEach(prop => saved[prop] = logger[prop]);
+    level = logger.getLevel();
+  });
+
+  afterEach(function() {
+    toSave.forEach(prop => logger[prop] = saved[prop]);
+    logger.setLevel(level);
+  });
+
+  it('should be able to create a child', function() {
+    var child = logger.child();
+    Object.keys(logger)
+      .forEach(prop => expect(child).to.have.ownProperty(prop));
+  });
+
+  it('should have own context', function() {
+    let context = { a: 1 };
+    let child = logger.child(context);
+    sandbox.spy(child, 'format');
+
+    child.info();
+    expect(child.format).to.have.been.calledWith('INFO', context);
+  });
+
+  it('should append own context to parent one', function() {
+    logger.getContext = function() { return {
+      a: true,
+      b: 'should be overwritten'
+    }; };
+    let child = logger.child({
+      b: true
+    });
+    sandbox.spy(child, 'format');
+    child.info();
+
+    expect(child.format).to.have.been.calledWith('INFO', {
+      a: true,
+      b: true
+    });
+  });
+
+  it('should use parent log level', function() {
+    logger.setLevel('ERROR')
+    let child = logger.child();
+    sandbox.spy(child, 'format');
+    child.info();
+
+    expect(child.format).not.to.have.been.called;
+  });
+
+  it('should use own log level', function() {
+    logger.setLevel('DEBUG')
+    let child = logger.child();
+    child.setLevel('ERROR')
+    sandbox.spy(child, 'format');
+    sandbox.spy(logger, 'format');
+    child.info();
+    logger.info();
+    expect(child.format).not.to.have.been.called;
+    expect(logger.format).to.have.been.called;
+  });
+
+  it('should use parent stream', function() {
+    logger.stream = {
+      write: sandbox.spy()
+    }
+
+    let child = logger.child();
+    child.info();
+
+    expect(logger.stream.write).to.have.been.called;
+  });
+
+  it('should have several generations', function() {
+    logger.getContext = () => ({a: 1});
+    let child1 = logger.child({b:2});
+    let child2 = child1.child({c:3});
+    let child3 = child2.child({d:4});
+
+    sandbox.spy(child3, 'format');
+    child3.info();
+    expect(child3.format).to.have.been.calledWith('INFO', {
+      a: 1, b: 2, c: 3, d:4
+    });
   });
 });
