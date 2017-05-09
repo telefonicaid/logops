@@ -54,7 +54,7 @@ logger.fatal(new Error('Out of memory'), 'SYSTEM UNSTABLE. BYE');
 
 ## Context support
 
-Logops supports using global properties that will be merged with the specific ones defined in the call. Simply override the `logger.getContext` method to let the logger to get it. See `logops.child` to see how to also create loggers with context 
+Logops supports using global properties that will be merged with the specific ones defined in the call. Simply override the `logger.getContext` method to let the logger get it. See `logops.child` to see how to also create loggers with context 
 
 ```js
 var logger = require('logops'),
