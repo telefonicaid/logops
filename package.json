@@ -51,8 +51,8 @@
   ],
   "dependencies": {
     "colors": "^1.1.2",
-    "json-stringify-safe": "^5.0.1",
     "lodash": "^4.1.0",
+    "safe-json-stringify": "^1.0.4",
     "serr": "^1.0.0"
   },
   "contributors": [

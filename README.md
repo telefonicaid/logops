@@ -222,43 +222,39 @@ to be compliant with it, to reduce developer learning curve, make our preexistin
 A very basic [benchmark](./benchmark/index.js) with the most common use case has 
 been setup to compare with [`bunyan`](https://github.com/trentm/node-bunyan)
 
-Running on a MAC OS X Yosemite, 2,5 GHz Intel Core i5, 8 GB 1333 MHz DDR3, SSD disk, node 4.2.2
+Running on a MAC OS X Yosemite, 2,5 GHz Intel Core i5, 8 GB 1333 MHz DDR3, SSD disk, node 6.10.0
  
 ```
 $ cd benchmark; npm start
-               
-> benchmarklogops@1.0.0 start /Users/javier/Documents/Proyectos/logops/benchmark
-> npm run tee && npm run file && npm run null && rm out.log
-
-
+ 
 > benchmarklogops@1.0.0 tee /Users/javier/Documents/Proyectos/logops/benchmark
 > node index.js | tee -a out.log > /dev/null
 
-logops x 39,560 ops/sec ±3.00% (75 runs sampled)
-bunyan x 27,365 ops/sec ±2.23% (79 runs sampled)
-Basic logging: Fastest is logops
-logops x 73,150,310 ops/sec ±1.64% (79 runs sampled)
-bunyan x 1,569,549 ops/sec ±3.67% (78 runs sampled)
+logops x 70,675 ops/sec ±11.89% (65 runs sampled)
+bunyan x 81,981 ops/sec ±4.76% (70 runs sampled)
+Basic logging: Fastest is bunyan,logops
+logops x 67,169,402 ops/sec ±2.79% (80 runs sampled)
+bunyan x 5,774,822 ops/sec ±5.74% (75 runs sampled)
 Disabled logging: Fastest is logops
 
 > benchmarklogops@1.0.0 file /Users/javier/Documents/Proyectos/logops/benchmark
 > node index.js > out.log
 
-logops x 43,136 ops/sec ±1.31% (82 runs sampled)
-bunyan x 28,653 ops/sec ±1.05% (84 runs sampled)
+logops x 37,479 ops/sec ±5.69% (76 runs sampled)
+bunyan x 36,211 ops/sec ±2.72% (77 runs sampled)
 Basic logging: Fastest is logops
-logops x 80,439,813 ops/sec ±1.17% (85 runs sampled)
-bunyan x 1,645,447 ops/sec ±1.66% (85 runs sampled)
+logops x 70,740,515 ops/sec ±1.71% (82 runs sampled)
+bunyan x 6,324,283 ops/sec ±2.68% (78 runs sampled)
 Disabled logging: Fastest is logops
 
 > benchmarklogops@1.0.0 null /Users/javier/Documents/Proyectos/logops/benchmark
 > node index.js > /dev/null
 
-logops x 52,947 ops/sec ±1.80% (80 runs sampled)
-bunyan x 33,696 ops/sec ±0.96% (84 runs sampled)
+logops x 49,509 ops/sec ±4.92% (77 runs sampled)
+bunyan x 47,759 ops/sec ±4.34% (69 runs sampled)
 Basic logging: Fastest is logops
-logops x 77,479,942 ops/sec ±1.47% (79 runs sampled)
-bunyan x 1,411,108 ops/sec ±1.92% (85 runs sampled)
+logops x 68,293,618 ops/sec ±2.64% (80 runs sampled)
+bunyan x 6,232,825 ops/sec ±2.42% (81 runs sampled)
 Disabled logging: Fastest is logops
 ```
 
