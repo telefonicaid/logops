@@ -21,7 +21,7 @@
     "node": ">=6"
   },
   "scripts": {
-    "travis": "nyc report--reporter=text-lcov | coverall",
+    "travis": "nyc report--reporter=text-lcov | coveralls",
     "coverage": "nyc npm run test",
     "lint": "eslint lib && tslint './{lib,test}/**/*.ts'",
     "test": "mocha -R spec test/environment.js test/*.spec.js && tsc --noEmit"
