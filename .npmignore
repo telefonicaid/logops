@@ -20,3 +20,5 @@ tslint.json
 
 npm-debug.log
 CONTRIBUTING.md
+
+.nyc_output

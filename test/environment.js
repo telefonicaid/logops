@@ -16,7 +16,7 @@ beforeEach(function(){
       logger._lastTrace = str.trim();
     }
   };
-  global.sandbox = sinon.sandbox.create();
+  global.sandbox = sinon.createSandbox();
   global.sandbox.useFakeTimers();
 });
 

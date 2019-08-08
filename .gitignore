@@ -9,3 +9,4 @@ test/logops.typings.js
 
 *.bak
 *.orig
+.nyc_output
