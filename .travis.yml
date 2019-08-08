@@ -1,11 +1,13 @@
 language: node_js
 sudo: false
 node_js:
-  - "6"
   - "8"
+  - "10"
+  - "12"
 script:
-  - "npm run travis"
+  - "npm run test"
   - "npm run lint"
+after_success: npm run coverage
 cache:
   directories:
     - node_modules

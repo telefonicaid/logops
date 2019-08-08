@@ -21,26 +21,21 @@
     "node": ">=6"
   },
   "scripts": {
-    "travis": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec test/environment.js test/*.spec.js && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage && tsc --noEmit",
-    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R dot test/environment.js test/*.spec.js",
-    "lint": "jscs lib && eslint lib && tslint './{lib,test}/**/*.ts'",
-    "test": "mocha -R spec test/environment.js test/*.spec.js && tsc --noEmit",
-    "changelog": "conventional-changelog -p jshint",
-    "release": "release-it"
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "lint": "eslint lib && tslint './{lib,test}/**/*.ts'",
+    "test": "nyc mocha -R spec test/environment.js 'test/**/*.spec.js' && npm run test:ts",
+    "test:ts": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/node": "^6.0.42",
-    "chai": "^3.0.0",
-    "conventional-changelog-cli": "^1.1.0",
-    "coveralls": "^2.11.2",
-    "eslint": "^3.19.0",
-    "istanbul": "^0.4.0",
-    "jscs": "^3.0.3",
-    "mocha": "^3.3.0",
-    "release-it": "^2.3.1",
-    "sinon": "^2.2.0",
-    "sinon-chai": "^2.8.0",
-    "tslint": "^5.2.0",
+    "@types/node": "^8.0.42",
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.6",
+    "eslint": "^6.1.0",
+    "mocha": "^6.0.2",
+    "nyc": "14.1.1",
+    "sinon": "^7.4.1",
+    "sinon-chai": "^3.3.0",
+    "tslint": "^5.18.0",
     "tslint-config-typings": "^0.3.1",
     "typescript": "^2.0.3"
   },
@@ -51,9 +46,9 @@
   ],
   "dependencies": {
     "colors": "^1.1.2",
-    "lodash": "^4.1.0",
-    "safe-json-stringify": "^1.0.4",
-    "serr": "^1.0.0"
+    "lodash": "^4.17.15",
+    "safe-json-stringify": "^1.2.0",
+    "serr": "^1.0.1"
   },
   "contributors": [
     "Juan Antonio Hernando Labajo <juanantonio.hernandolabajo@telefonica.com>",
