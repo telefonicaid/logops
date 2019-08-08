@@ -5,8 +5,9 @@ node_js:
   - "10"
   - "12"
 script:
-  - "npm run travis"
+  - "npm run test"
   - "npm run lint"
+after_success: npm run coverage
 cache:
   directories:
     - node_modules
