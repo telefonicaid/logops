@@ -2,7 +2,7 @@
 
 var logger = require('../lib/logops'),
     util = require('util'),
-    colors = require('colors/safe');
+    chalk = require('chalk');
 
 describe('Development format', function() {
   var context = {};
@@ -14,43 +14,43 @@ describe('Development format', function() {
     it('should have blue color when info trace is formatted', function() {
       var message = 'Sample Message';
       var result = logger.format('INFO', context, message, []);
-      expect(result).to.be.equal(colors.blue('INFO') + '  ' + message);
+      expect(result).to.be.equal(chalk.blue('INFO') + '  ' + message);
     });
 
     it('should have grey color when debug trace is formatted', function() {
       var message = 'Sample Message';
       var result = logger.format('DEBUG', context, message, []);
-      expect(result).to.be.equal(colors.grey('DEBUG') + ' ' + message);
+      expect(result).to.be.equal(chalk.grey('DEBUG') + ' ' + message);
     });
 
     it('should have yellow color when warn trace is formatted', function() {
       var message = 'Sample Message';
       var result = logger.format('WARN', context, message, []);
-      expect(result).to.be.equal(colors.yellow('WARN') + '  ' + message);
+      expect(result).to.be.equal(chalk.yellow('WARN') + '  ' + message);
     });
 
     it('should have red color when error trace is formatted', function() {
       var message = 'Sample Message';
       var result = logger.format('ERROR', context, message, []);
-      expect(result).to.be.equal(colors.red('ERROR') + ' ' + message);
+      expect(result).to.be.equal(chalk.red('ERROR') + ' ' + message);
     });
 
     it('should have fatal style when fatal trace is formatted', function() {
       var message = 'Sample Message';
       var result = logger.format('FATAL', context, message, []);
-      expect(result).to.be.equal(colors.red.bold('FATAL') + ' ' + message);
+      expect(result).to.be.equal(chalk.red.bold('FATAL') + ' ' + message);
     });
   });
 
 
   describe('Logging Messages', function() {
     // Disabling colors for this suite
-    var colorsEnabled = colors.enabled;
+    var colorsEnabled = chalk.level;
     before(function() {
-      colors.enabled = false;
+      chalk.level = 0;
     });
     after(function() {
-      colors.enabled = colorsEnabled;
+      chalk.level = colorsEnabled;
     });
 
     it('should log empty strings', function() {
@@ -155,12 +155,13 @@ describe('Development format', function() {
       arr.shift();
       return arr.join('\n');
     }
-    var colorsEnabled = colors.enabled;
+
+    var colorsEnabled = chalk.level;
     before(function() {
-      colors.enabled = false;
+      chalk.level = 0;
     });
     after(function() {
-      colors.enabled = colorsEnabled;
+      chalk.level = colorsEnabled;
     });
 
     it('should log errors without stacktrace', function() {
