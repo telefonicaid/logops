@@ -1,7 +1,7 @@
 {
   "name": "logops",
   "description": "Simple and performant nodejs JSON logger",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "homepage": "https://github.com/telefonicaid/logops",
   "license": "Apache-2.0",
   "author": {
@@ -49,12 +49,5 @@
     "lodash": "^4.17.15",
     "safe-json-stringify": "^1.2.0",
     "serr": "^1.0.1"
-  },
-  "contributors": [
-    "Juan Antonio Hernando Labajo <juanantonio.hernandolabajo@telefonica.com>",
-    "Guido García Bernardo <guido.garciabernardo@telefonica.com>",
-    "Germán Toro del Valle <german.torodelvalle@telefonica.com>",
-    "Daniel Morán Jiménez <daniel.moranjimenez@telefonica.com>",
-    "Juan de Bravo Diez <juande.bravodiez@telefonica.com>"
-  ]
+  }
 }
