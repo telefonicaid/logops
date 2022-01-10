@@ -45,7 +45,7 @@
     "performant"
   ],
   "dependencies": {
-    "colors": "^1.1.2",
+    "colors": "1.1.2",
     "lodash": "^4.17.15",
     "safe-json-stringify": "^1.2.0",
     "serr": "^1.0.1"
