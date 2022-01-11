@@ -21,7 +21,8 @@
     "node": ">=6"
   },
   "scripts": {
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "test:coverage": "nyc --reporter=lcov mocha -- -R spec test/environment.js 'test/**/*.spec.js'  --reporter spec --exit",
+    "test:coveralls": "npm run test:coverage && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "lint": "eslint lib && tslint './{lib,test}/**/*.ts'",
     "test": "nyc mocha -R spec test/environment.js 'test/**/*.spec.js' && npm run test:ts",
     "test:ts": "tsc --noEmit"
