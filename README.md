@@ -3,7 +3,7 @@
 Really simple and performant JSON logger for node.js.
 
 [![npm version](https://img.shields.io/npm/v/logops.svg)](http://badge.fury.io/js/logops)
-[![Build Status](https://img.shields.io/travis/telefonicaid/logops.svg)](https://travis-ci.org/telefonicaid/logops)
+[![CI](https://github.com/telefonicaid/logops/workflows/CI/badge.svg)](https://github.com/telefonicaid/logops/actions?query=workflow%3ACI)
 [![Coveralls branch](https://img.shields.io/coveralls/telefonicaid/logops/master.svg)](https://coveralls.io/r/telefonicaid/logops?branch=master)
 [![Dependency Status](https://img.shields.io/gemnasium/telefonicaid/logops.svg)](https://gemnasium.com/telefonicaid/logops)
 ![Typescript definitions](https://img.shields.io/badge/TypeScript%20Definition-.d.ts-blue.svg)
